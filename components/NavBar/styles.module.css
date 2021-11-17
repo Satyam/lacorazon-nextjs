@@ -1,0 +1,18 @@
+.navbar {
+  background-color: #e4ccaa;
+}
+
+.navbrand {
+  color: #644240;
+}
+
+.user img {
+  width: 2em;
+  border-radius: 1em;
+  margin-right: 0.3em;
+  height: 2em;
+}
+
+.user svg {
+  margin-right: 0.3em;
+}
