@@ -23,6 +23,12 @@ export default function Layout({
     <>
       <Head>
         <title>{title ? `La Corazón - ${title}` : 'La Corazón'}</title>
+        <link
+          rel="icon"
+          sizes="200x200"
+          href="/La Corazon.png"
+          type="image/png"
+        ></link>
       </Head>
       <Navbar />
       <Container fluid>
