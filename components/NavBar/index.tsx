@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import classNames from 'classnames';
 import {
   Collapse,
   Navbar,
@@ -29,8 +30,8 @@ export default function NavBar() {
   return (
     <div>
       <Navbar expand="md" light className={styles.navbar}>
-        <Link href="/" passHref>
-          <NavbarBrand className={styles.navbrand}>
+        <Link href="/">
+          <a className={classNames('navbar-brand', styles.navbrand)}>
             <Image
               src="/La Corazon.png"
               alt="La Corazón"
@@ -39,7 +40,7 @@ export default function NavBar() {
               height="20"
             />{' '}
             La Corazón
-          </NavbarBrand>
+          </a>
         </Link>
         <NavbarToggler onClick={toggle} />
         <Collapse isOpen={isOpen} navbar>
