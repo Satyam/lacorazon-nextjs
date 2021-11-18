@@ -1,4 +1,4 @@
-import { User, Venta, Rango } from './types';
+import { User, Rango } from './types';
 import {
   getById,
   getAllLimitOffset,
@@ -15,78 +15,18 @@ export function list(rango: Rango) {
   return getAllLimitOffset<User>(TABLE, rango, safeFields);
 }
 
-// export default const x = {
-//   Query: {
-//     user: (
-//       _: unused,
-//       { id }: { id: ID },
-//       { db }: sqlContext
-//     ): Promise<User | undefined> => getById<User>(TABLE, id, db, safeFields),
-//     users: (
-//       _: unused,
-//       rango: Rango,
-//       { db }: sqlContext
-//     ): Promise<User[] | undefined> =>
-//       getAllLimitOffset<User>(TABLE, rango, db, safeFields),
-//     currentUser: (_: unused, _1: unused, { req }: sqlContext): string =>
-//       req.currentUser,
-//   },
-//   Mutation: {
-//     createUser: (
-//       _: unused,
-//       user: User,
-//       { db }: sqlContext
-//     ): Promise<User | undefined> =>
-//       createWithCuid<User>(TABLE, user, db, safeFields),
-//     updateUser: (
-//       _: unused,
-//       user: User,
-//       { db }: sqlContext
-//     ): Promise<User | undefined> =>
-//       updateById<User>(TABLE, user, db, safeFields),
-//     deleteUser: (
-//       _: unused,
-//       { id }: { id: ID },
-//       { db /*, permissions */ }: sqlContext
-//     ): Promise<User | undefined> =>
-//       // permissions.includes('user:delete')
-//       //   ? deleteById(TABLE, id, db, safeFields)
-//       //   : new Error('unauthorized'),
-//       deleteById<User>(TABLE, id, db, safeFields),
-//   },
-//   User: {
-//     ventas: (
-//       parent: User,
-//       { offset = 0, limit, last }: Rango,
-//       { db }: sqlContext
-//     ): Promise<Array<Venta> | undefined> => {
-//       if (last) {
-//         return db
-//           .all(
-//             'select * from Ventas where idVendedor = $idVendedor order by fecha desc, id desc limit $last',
-//             {
-//               $idVendedor: parent.id,
-//               $last: last,
-//             }
-//           )
-//           .then((data) => data.reverse());
-//       }
-//       if (limit) {
-//         return db.all(
-//           'select * from Ventas where idVendedor = $idVendedor order by fecha, id limit $limit offset $offset',
-//           {
-//             $idVendedor: parent.id,
-//             $limit: limit,
-//             $offset: offset,
-//           }
-//         );
-//       }
-//       return db.all(
-//         'select * from Ventas where idVendedor = $idVendedor order by fecha, id',
-//         {
-//           $idVendedor: parent.id,
-//         }
-//       );
-//     },
-//   },
-// };
+export function del(id: ID) {
+  return deleteById<User>(TABLE, id, safeFields);
+}
+
+export function get(id: ID) {
+  return getById<User>(TABLE, id, safeFields);
+}
+
+export function create(user: User) {
+  return createWithCuid<User>(TABLE, user, safeFields);
+}
+
+export function update(user: User) {
+  return updateById<User>(TABLE, user, safeFields);
+}

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { Table, ButtonGroup, Alert } from 'reactstrap';
 import { useRouter } from 'next/router';
-import useSWR from 'swr';
+import { useListUsers, deleteUser } from 'util/fetch';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -10,29 +10,22 @@ import {
 } from 'components/Icons';
 import Layout from 'components/Layout';
 import type { User } from 'data/types';
-import listUsers from 'pages/api/users/list';
 
-// import { Loading } from 'Components/Modals';
+import { Loading, useModals } from 'components/Modals';
 // import { useModals } from 'Providers/Modals';
 // import { useAuth0 } from 'Providers/Auth';
 
 // import { useListUsers, useDeleteUser, UserType } from './actions';
 
-const ListUsers = ({ users }: { users: User[] }) => {
+const ListUsers = () => {
   const router = useRouter();
-  const fetcher = (url: string) => fetch(url).then((res) => res.json());
-  const { data, error } = useSWR<User[]>('/api/users/list', fetcher);
+  const { data: users, error, mutate } = useListUsers();
+  const { confirmDelete } = useModals();
 
   if (error) return <div>failed to load</div>;
-  if (!data) return <div>loading...</div>;
+  if (!users) return <Loading>Cargando usuarios</Loading>;
 
-  // const { loading, error, users } = useListUsers();
-  // const deleteUser = useDeleteUser();
-  // const { confirmDelete } = useModals();
-  // const [gqlErr, setGqlErr] = useState<string | false>(false);
   // const { can } = useAuth0();
-
-  // if (loading) return <Loading>Cargando usuarios</Loading>;
 
   const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
@@ -42,17 +35,15 @@ const ListUsers = ({ users }: { users: User[] }) => {
     ev.stopPropagation();
     router.push(`/user/${ev.currentTarget.dataset.id}`);
   };
-  // const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-  //   ev.stopPropagation();
-  //   const { nombre, id } = ev.currentTarget.dataset;
-  //   confirmDelete(`al usuario ${nombre}`, () =>
-  //     deleteUser(id as string).catch((err) => {
-  //       if (err.message === 'GraphQL error: unauthorized') {
-  //         setGqlErr('No está autorizado para borrar el usuario');
-  //       } else throw err;
-  //     })
-  //   );
-  // };
+  const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
+    ev.stopPropagation();
+    const { nombre, id } = ev.currentTarget.dataset;
+    confirmDelete(`al usuario ${nombre}`, () =>
+      deleteUser(id as string).then(() => {
+        mutate();
+      })
+    );
+  };
   const onEdit: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     router.push(`/user/edit/${ev.currentTarget.dataset.id}`);
@@ -74,14 +65,14 @@ const ListUsers = ({ users }: { users: User[] }) => {
         <td align="center">
           <ButtonGroup size="sm">
             <ButtonIconEdit outline onClick={onEdit} data-id={id} />
-            {/* {can('user:delete') && (
-              <ButtonIconDelete
-                outline
-                onClick={onDelete}
-                data-id={id}
-                data-nombre={user.nombre}
-              />
-            )} */}
+            {/* {can('user:delete') && ( */}
+            <ButtonIconDelete
+              outline
+              onClick={onDelete}
+              data-id={id}
+              data-nombre={user.nombre}
+            />
+            {/* )} */}
           </ButtonGroup>
         </td>
       </tr>
@@ -97,7 +88,7 @@ const ListUsers = ({ users }: { users: User[] }) => {
           Agregar
         </ButtonIconAdd>
       }
-      // error={error}
+      error={error}
     >
       {/* <Alert color="danger" isOpen={!!gqlErr} toggle={() => setGqlErr(false)}>
         {gqlErr}
