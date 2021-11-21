@@ -1,6 +1,5 @@
-import React, { useState } from 'react';
-import { GetServerSideProps } from 'next';
-import { Table, ButtonGroup, Alert } from 'reactstrap';
+import React from 'react';
+import { Table, ButtonGroup } from 'reactstrap';
 import { useRouter } from 'next/router';
 import { useListUsers, deleteUser } from 'util/fetch';
 import {
@@ -12,10 +11,7 @@ import Layout from 'components/Layout';
 import type { User } from 'data/types';
 
 import { Loading, useModals } from 'components/Modals';
-// import { useModals } from 'Providers/Modals';
 // import { useAuth0 } from 'Providers/Auth';
-
-// import { useListUsers, useDeleteUser, UserType } from './actions';
 
 const ListUsers = () => {
   const router = useRouter();
@@ -101,10 +97,6 @@ const ListUsers = () => {
       }
       error={error}
     >
-      {/* <Alert color="danger" isOpen={!!gqlErr} toggle={() => setGqlErr(false)}>
-        {gqlErr}
-      </Alert> */}
-
       <Table striped hover size="sm" responsive bordered>
         <thead>
           <tr>
