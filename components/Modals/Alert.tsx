@@ -6,15 +6,14 @@ import styles from './styles.module.css';
 
 const Alert: React.FC<{
   heading?: string;
-  descr?: string;
   warning?: boolean;
   onClose: () => void;
-}> = ({ heading = 'Aviso', descr, warning = false, onClose }) => (
-  <Modal isOpen={!!descr}>
+}> = ({ heading = 'Aviso', children, warning = false, onClose }) => (
+  <Modal isOpen={!!children}>
     <ModalHeader className={styles.alertHeader}>{heading}</ModalHeader>
     <ModalBody className={styles.alertBody}>
       {warning && <IconWarning />}
-      {descr}
+      {children}
     </ModalBody>
     <ModalFooter>
       <Button color="primary" outline onClick={onClose}>
