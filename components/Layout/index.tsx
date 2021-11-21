@@ -39,10 +39,10 @@ export default function Layout({
               <div className={styles.action}>{action}</div>
             </div>
             <div className={styles.clear}>{error}</div>
+            <main>{children}</main>
           </Col>
         </Row>
       </Container>
-      <main>{children}</main>
     </>
   );
 }
