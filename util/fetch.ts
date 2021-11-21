@@ -1,25 +1,48 @@
 import useSWR from 'swr';
 
+class FetchError extends Error {
+  status: number;
+  url: string;
+  constructor(res: Response) {
+    super(res.statusText);
+    this.name = 'FetchError';
+    this.status = res.status;
+    this.url = res.url;
+  }
+  toString() {
+    return `FetchError: ${this.message} Status: ${this.status} on fetch from  ${this.url}`;
+  }
+}
+
 export const swrFetcher = (url: string, config?: RequestInit) => {
   return fetch(url, config).then((res) => {
-    if (!res.ok) {
-      const error: Error & { status?: number; info?: any } = new Error(
-        'An error occurred while fetching the data.'
-      );
-
-      return res.json().then((info) => {
-        error.info = info;
-        error.status = res.status;
-        throw error;
-      });
-      // Attach extra info to the error object.
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new FetchError(res);
     }
-    return res.json();
   });
 };
 
-export const localFetch = (url: string, config?: RequestInit) =>
-  swrFetcher(`${window.origin}${url}`, config);
+type FetchOpReply<T> = {
+  data?: T;
+  error?: FetchError;
+};
+
+export const localFetch = async (
+  url: string,
+  config?: RequestInit
+): Promise<FetchOpReply<User>> => {
+  return fetch(`${window.origin}${url}`, config).then(
+    async (res): Promise<FetchOpReply<User>> => {
+      if (res.ok) {
+        return { data: await res.json() };
+      } else {
+        return { error: new FetchError(res) };
+      }
+    }
+  );
+};
 
 import type { User } from 'data/types';
 const API_USERS = '/api/users';

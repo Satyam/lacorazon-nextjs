@@ -20,7 +20,7 @@ import { Loading, useModals } from 'components/Modals';
 const ListUsers = () => {
   const router = useRouter();
   const { data: users, error, mutate } = useListUsers();
-  const { confirmDelete } = useModals();
+  const { confirmDelete, alert } = useModals();
 
   if (error) return <div>failed to load</div>;
   if (!users) return <Loading>Cargando usuarios</Loading>;
@@ -39,8 +39,19 @@ const ListUsers = () => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () =>
-      deleteUser(id as string).then(() => {
-        mutate();
+      deleteUser(id as string).then((res) => {
+        if (res.error) {
+          if (res.error.status === 404) {
+            alert(
+              'No existe',
+              `El usuario "${nombre}" no existe o ha sido borrado`,
+              true,
+              () => {}
+            );
+          } else throw res.error;
+        } else {
+          mutate();
+        }
       })
     );
   };
