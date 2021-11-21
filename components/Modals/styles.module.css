@@ -1,12 +1,18 @@
-.confirmDeleteHeader {
+.confirmDeleteHeader,
+.alertHeader {
   background-color: var(--primary);
   color: var(--light);
 }
 
-.confirmDeleteBody {
+.confirmDeleteBody,
+.alertBody {
   width: 100%;
   text-align: center;
   padding: 2em;
+}
+
+.alertBody svg {
+  margin-right: 1em;
 }
 
 .loadingContainer {

@@ -11,13 +11,13 @@ const Alert: React.FC<{
   onClose: () => void;
 }> = ({ heading = 'Aviso', descr, warning = false, onClose }) => (
   <Modal isOpen={!!descr}>
-    <ModalHeader className={styles.confirmDeleteHeader}>{heading}</ModalHeader>
-    <ModalBody className={styles.confirmDeleteBody}>
+    <ModalHeader className={styles.alertHeader}>{heading}</ModalHeader>
+    <ModalBody className={styles.alertBody}>
       {warning && <IconWarning />}
       {descr}
     </ModalBody>
     <ModalFooter>
-      <Button outline onClick={onClose}>
+      <Button color="primary" outline onClick={onClose}>
         Aceptar
       </Button>
     </ModalFooter>
