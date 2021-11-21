@@ -29,7 +29,7 @@ const ListUsers = () => {
   };
   const onShow: React.MouseEventHandler<HTMLTableCellElement> = (ev) => {
     ev.stopPropagation();
-    router.push(`/user/${ev.currentTarget.dataset.id}`);
+    router.push(`/users/${ev.currentTarget.dataset.id}`);
   };
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();

@@ -1,6 +1,6 @@
 import useSWR from 'swr';
 
-class FetchError extends Error {
+export class FetchError extends Error {
   status: number;
   url: string;
   constructor(res: Response) {
@@ -47,9 +47,11 @@ export const localFetch = async (
 import type { User } from 'data/types';
 const API_USERS = '/api/users';
 
-export const useListUsers = () => useSWR<User[]>(API_USERS);
+export const useListUsers = () => useSWR<User[], Error>(API_USERS);
 
 export const deleteUser = (id: ID) =>
   localFetch(`${API_USERS}/${id}`, { method: 'DELETE' });
 
 export const getUser = (id: ID) => localFetch(`${API_USERS}/${id}`);
+
+export const useGetUser = (id: ID) => useSWR<User, Error>(`${API_USERS}/${id}`);
