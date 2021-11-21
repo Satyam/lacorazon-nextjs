@@ -18,5 +18,9 @@ export default async function handler(
       reply = await get(id as ID);
       break;
   }
-  res.json(reply);
+  if (reply) {
+    res.json(reply);
+  } else {
+    res.status(404).end('not found');
+  }
 }
