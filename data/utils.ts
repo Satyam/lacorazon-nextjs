@@ -105,8 +105,7 @@ export async function updateById<R extends RecordWithId>(
         .join(',')})  where id = ?`,
       [...values, id]
     );
-    if (result.changes !== 1)
-      throw new Error(`${id} not found in ${nombreTabla}`);
+    if (result.changes !== 1) return;
     return getById(nombreTabla, id, camposSalida);
   }
 }
@@ -122,7 +121,7 @@ export async function deleteById<R extends RecordWithId>(
     const db = await getDb();
     await db.run(`delete from ${nombreTabla} where id = ?`, [id]);
     return old as R;
-  } else throw new Error(`${id} not found in ${nombreTabla}`);
+  } else return;
 }
 
 // export function delay(ms: number) {
