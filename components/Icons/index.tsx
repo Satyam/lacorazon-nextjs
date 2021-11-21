@@ -40,7 +40,7 @@ export const Icon: React.FC<{
   <IconComponent
     className={cx(className, {
       'active-icon': isButton && !disabled,
-      [`icon-${color}`]: color,
+      [`text-${color}`]: color,
       disabled: disabled,
     })}
     onClick={disabled ? undefined : onClick}
@@ -48,10 +48,9 @@ export const Icon: React.FC<{
   />
 );
 
-export const IconAdd: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'primary',
-  ...props
-}) => <Icon IconComponent={FaPlusCircle} {...props} />;
+export const IconAdd: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaPlusCircle} color="primary" {...props} />
+);
 
 export const ButtonIconAdd: React.FC<MyButtonProps> = ({
   children,
@@ -65,10 +64,9 @@ export const ButtonIconAdd: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconDelete: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'danger',
-  ...props
-}) => <Icon IconComponent={FaRegTrashAlt} {...props} />;
+export const IconDelete: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaRegTrashAlt} color="danger" {...props} />
+);
 
 export const ButtonIconDelete: React.FC<MyButtonProps> = ({
   children,
@@ -82,10 +80,9 @@ export const ButtonIconDelete: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconEdit: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'secondary',
-  ...props
-}) => <Icon IconComponent={FaRegEdit} {...props} />;
+export const IconEdit: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaRegEdit} color="secondary" {...props} />
+);
 
 export const ButtonIconEdit: React.FC<MyButtonProps> = ({
   children,
@@ -99,10 +96,9 @@ export const ButtonIconEdit: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconView: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'info',
-  ...props
-}) => <Icon IconComponent={FaEye} {...props} />;
+export const IconView: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaEye} color="info" {...props} />
+);
 
 export const ButtonIconView: React.FC<MyButtonProps> = ({
   children,
@@ -116,10 +112,9 @@ export const ButtonIconView: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconCheck: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'success',
-  ...props
-}) => <Icon IconComponent={FaCheckCircle} {...props} />;
+export const IconCheck: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaCheckCircle} color="success" {...props} />
+);
 
 export const ButtonIconCheck: React.FC<MyButtonProps> = ({
   children,
@@ -132,10 +127,9 @@ export const ButtonIconCheck: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconNotCheck: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'danger',
-  ...props
-}) => <Icon IconComponent={FaTimesCircle} {...props} />;
+export const IconNotCheck: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaTimesCircle} color="danger" {...props} />
+);
 
 export const ButtonIconNotCheck: React.FC<MyButtonProps> = ({
   children,
@@ -148,10 +142,9 @@ export const ButtonIconNotCheck: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconCalendar: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'secondary',
-  ...props
-}) => <Icon IconComponent={FaCalendarAlt} {...props} />;
+export const IconCalendar: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaCalendarAlt} color="secondary" {...props} />
+);
 
 export const ButtonIconCalendar: React.FC<MyButtonProps> = ({
   children,
@@ -165,21 +158,22 @@ export const ButtonIconCalendar: React.FC<MyButtonProps> = ({
   </Button>
 );
 
-export const IconWarning: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'warning',
-  ...props
-}) => <Icon IconComponent={FaExclamationTriangle} {...props} />;
+export const IconWarning: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaExclamationTriangle} color="warning" {...props} />
+);
 
-export const IconStop: React.FC<{ color?: BootstrapColor }> = ({
-  color = 'danger',
-  ...props
-}) => <Icon IconComponent={FaExclamationCircle} {...props} />;
+export const IconStop: React.FC<{ color?: BootstrapColor }> = (props) => (
+  <Icon IconComponent={FaExclamationCircle} color="danger" {...props} />
+);
 
 export const ButtonSet: React.FC<{
   className?: string;
   size?: BootstrapSize;
 }> = ({ className, children, size, ...rest }) => (
-  <div className={cx('buttonSet', { [`btn-group-${size}`]: size }, className)}>
+  <div
+    className={cx('buttonSet', { [`btn-group-${size}`]: size }, className)}
+    {...rest}
+  >
     {children}
   </div>
 );
