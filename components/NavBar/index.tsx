@@ -22,8 +22,8 @@ export default function NavBar() {
     <div>
       <Navbar expand="md" bg="light" className={styles.navbar}>
         <Container>
-          <Link href="/">
-            <a className={classNames('navbar-brand', styles.navbrand)}>
+          <Link href="/" passHref>
+            <Navbar.Brand>
               <Image
                 src="/La Corazon.png"
                 alt="La Corazón"
@@ -32,7 +32,7 @@ export default function NavBar() {
                 height="20"
               />{' '}
               La Corazón
-            </a>
+            </Navbar.Brand>
           </Link>
           <Navbar.Toggle />
           <Navbar.Collapse>
