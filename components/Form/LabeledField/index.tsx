@@ -1,5 +1,5 @@
 import React, { DOMAttributes } from 'react';
-import { FormGroup, Label, Col } from 'reactstrap';
+import { Form, Col, Row } from 'react-bootstrap';
 import classNames from 'classnames/bind';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import styles from './styles.module.css';
@@ -14,10 +14,10 @@ export const LabeledText: React.FC<
     className?: string;
   } & DOMAttributes<HTMLDivElement>
 > = ({ label, value, children, pre, className, ...rest }) => (
-  <FormGroup row>
-    <Label xs={12} lg={2}>
+  <Form.Group as={Row}>
+    <Form.Label column xs={12} lg={2}>
       {label}
-    </Label>
+    </Form.Label>
     <Col xs={12} lg={8}>
       <div
         className={cx(
@@ -32,7 +32,7 @@ export const LabeledText: React.FC<
         {children}
       </div>
     </Col>
-  </FormGroup>
+  </Form.Group>
 );
 
 export const LabeledCheckbox: React.FC<{
@@ -41,10 +41,10 @@ export const LabeledCheckbox: React.FC<{
   checked?: boolean;
   className?: string;
 }> = ({ label, value, checked, className, ...rest }) => (
-  <FormGroup row>
-    <Label xs={12} lg={2}>
+  <Form.Group as={Row}>
+    <Form.Label column xs={12} lg={2}>
       {label}
-    </Label>
+    </Form.Label>
     <Col xs={12} lg={8}>
       <div
         className={classNames('form-control', 'readonly', className)}
@@ -53,5 +53,5 @@ export const LabeledCheckbox: React.FC<{
         {value || checked ? <FaRegCheckSquare /> : <FaRegSquare />}
       </div>
     </Col>
-  </FormGroup>
+  </Form.Group>
 );
