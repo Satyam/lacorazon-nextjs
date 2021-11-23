@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table, ButtonGroup } from 'reactstrap';
+import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import { useListUsers, deleteUser } from 'util/fetch';
 import {
@@ -25,7 +25,7 @@ const ListUsers = () => {
 
   const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
-    router.push(`/user/new`);
+    router.push(`/users/new`);
   };
   const onShow: React.MouseEventHandler<HTMLTableCellElement> = (ev) => {
     ev.stopPropagation();
@@ -53,7 +53,7 @@ const ListUsers = () => {
   };
   const onEdit: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
-    router.push(`/user/edit/${ev.currentTarget.dataset.id}`);
+    router.push(`/users/edit/${ev.currentTarget.dataset.id}`);
   };
 
   const rowUser = (user: User) => {
@@ -91,7 +91,7 @@ const ListUsers = () => {
       title="Vendedores"
       heading="Vendedores"
       action={
-        <ButtonIconAdd outline onClick={onAdd} label="Agregar">
+        <ButtonIconAdd outline onClick={onAdd}>
           Agregar
         </ButtonIconAdd>
       }
