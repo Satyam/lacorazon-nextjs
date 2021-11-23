@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { Container, Row, Col } from 'reactstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Head from 'next/head';
 import Navbar from 'components/NavBar';
 import styles from './styles.module.css';
@@ -19,10 +19,12 @@ export default function Layout({
   children: ReactNode;
   error?: Error;
 }) {
+  const t = title ? `La Corazón - ${title}` : 'La Corazón';
   return (
     <>
       <Head>
-        <title>{title ? `La Corazón - ${title}` : 'La Corazón'}</title>
+        <title>{t}</title>
+        <meta name="description" content={t} />
         <link
           rel="icon"
           sizes="200x200"
@@ -33,7 +35,7 @@ export default function Layout({
       <Navbar />
       <Container fluid>
         <Row>
-          <Col sm="12" md={{ size: wide ? 12 : 8, offset: wide ? 0 : 2 }}>
+          <Col sm="12" md={{ span: wide ? 12 : 8, offset: wide ? 0 : 2 }}>
             <div className={styles.spacing}>
               <h1 className={styles.heading}>{heading}</h1>
               <div className={styles.action}>{action}</div>
