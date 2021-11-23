@@ -3,18 +3,13 @@ import Link from 'next/link';
 import Image from 'next/image';
 import classNames from 'classnames';
 import {
-  Collapse,
   Navbar,
-  NavbarToggler,
-  NavbarBrand,
   Nav,
-  NavLink,
-  NavItem,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-} from 'reactstrap';
+  // UncontrolledDropdown,
+  // DropdownToggle,
+  // DropdownMenu,
+  // DropdownItem,
+} from 'react-bootstrap';
 import { FaUser } from 'react-icons/fa';
 
 import styles from './styles.module.css';
@@ -29,7 +24,7 @@ export default function NavBar() {
 
   return (
     <div>
-      <Navbar expand="md" light className={styles.navbar}>
+      <Navbar expand="md" bg="light" className={styles.navbar}>
         <Link href="/">
           <a className={classNames('navbar-brand', styles.navbrand)}>
             <Image
@@ -42,24 +37,24 @@ export default function NavBar() {
             La Corazón
           </a>
         </Link>
-        <NavbarToggler onClick={toggle} />
-        <Collapse isOpen={isOpen} navbar>
+        <Navbar.Toggle onClick={toggle} />
+        <Navbar.Collapse>
           <Nav className="ml-auto" navbar>
-            <NavItem>
+            <Nav.Item>
               <Link href="/users" passHref>
-                <NavLink>Usuarios</NavLink>
+                <Nav.Link>Usuarios</Nav.Link>
               </Link>
-            </NavItem>
-            <NavItem>
+            </Nav.Item>
+            <Nav.Item>
               <Link href="/distribuidores" passHref>
-                <NavLink>Distribuidores</NavLink>
+                <Nav.Link>Distribuidores</Nav.Link>
               </Link>
-            </NavItem>
-            <NavItem>
+            </Nav.Item>
+            <Nav.Item>
               <Link href="/ventas" passHref>
-                <NavLink>Ventas</NavLink>
+                <Nav.Link>Ventas</Nav.Link>
               </Link>
-            </NavItem>
+            </Nav.Item>
             {/* <UncontrolledDropdown nav inNavbar>
               <DropdownToggle nav caret>
                 {locale}
@@ -106,7 +101,7 @@ export default function NavBar() {
               )}
             </UncontrolledDropdown> */}
           </Nav>
-        </Collapse>
+        </Navbar.Collapse>
       </Navbar>
     </div>
   );

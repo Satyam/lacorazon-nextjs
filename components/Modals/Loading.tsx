@@ -1,6 +1,6 @@
 import React from 'react';
 import icon from './loading.gif';
-import { Modal, ModalHeader, ModalBody } from 'reactstrap';
+import { Modal } from 'react-bootstrap';
 import Image from 'next/image';
 import styles from './styles.module.css';
 
@@ -16,13 +16,13 @@ const Loading: React.FC<{
   ...props
 }) => (
   <Modal isOpen={isOpen} {...props}>
-    <ModalHeader className={styles.loadingHeader}>{title}</ModalHeader>
-    <ModalBody className={styles.loadingContainer}>
+    <Modal.Header className={styles.loadingHeader}>{title}</Modal.Header>
+    <Modal.Body className={styles.loadingContainer}>
       {children}
       {!noIcon && (
         <Image className={styles.loadingImg} src={icon} alt="loading..." />
       )}
-    </ModalBody>
+    </Modal.Body>
   </Modal>
 );
 

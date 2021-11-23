@@ -1,5 +1,5 @@
 import React from 'react';
-import { Modal, ModalHeader, ModalBody, ModalFooter, Button } from 'reactstrap';
+import { Modal, Button } from 'react-bootstrap';
 import { IconWarning } from 'components/Icons';
 
 import styles from './styles.module.css';
@@ -10,16 +10,16 @@ const Alert: React.FC<{
   onClose: () => void;
 }> = ({ heading = 'Aviso', children, warning = false, onClose }) => (
   <Modal isOpen={!!children}>
-    <ModalHeader className={styles.alertHeader}>{heading}</ModalHeader>
-    <ModalBody className={styles.alertBody}>
+    <Modal.Header className={styles.alertHeader}>{heading}</Modal.Header>
+    <Modal.Body className={styles.alertBody}>
       {warning && <IconWarning />}
       {children}
-    </ModalBody>
-    <ModalFooter>
-      <Button color="primary" outline onClick={onClose}>
+    </Modal.Body>
+    <Modal.Footer>
+      <Button variant="outline-primary" onClick={onClose}>
         Aceptar
       </Button>
-    </ModalFooter>
+    </Modal.Footer>
   </Modal>
 );
 
