@@ -15,7 +15,7 @@ const Loading: React.FC<{
   isOpen = true,
   ...props
 }) => (
-  <Modal isOpen={isOpen} {...props}>
+  <Modal show={isOpen} {...props}>
     <Modal.Header className={styles.loadingHeader}>{title}</Modal.Header>
     <Modal.Body className={styles.loadingContainer}>
       {children}

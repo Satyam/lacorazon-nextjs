@@ -7,7 +7,7 @@ const ConfirmDelete: React.FC<{
   descr?: string;
   onClose: (result: boolean) => void;
 }> = ({ descr, onClose }) => (
-  <Modal isOpen={!!descr}>
+  <Modal show={!!descr}>
     <Modal.Header className={styles.confirmDeleteHeader}>
       Confirmación borrado
     </Modal.Header>

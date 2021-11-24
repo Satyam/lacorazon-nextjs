@@ -9,7 +9,7 @@ const Alert: React.FC<{
   warning?: boolean;
   onClose: () => void;
 }> = ({ heading = 'Aviso', children, warning = false, onClose }) => (
-  <Modal isOpen={!!children}>
+  <Modal show={!!children}>
     <Modal.Header className={styles.alertHeader}>{heading}</Modal.Header>
     <Modal.Body className={styles.alertBody}>
       {warning && <IconWarning />}
