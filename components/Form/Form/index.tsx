@@ -33,10 +33,6 @@ export default function Form<V extends Record<string, any>>({
   className?: string;
   children?: React.ReactNode;
 }): React.ReactElement {
-  console.log(
-    'defaultValues',
-    schema ? Object.assign(schema.getDefault(), defaultValues) : defaultValues
-  );
   const methods = useForm<V>({
     defaultValues: schema
       ? Object.assign(schema.getDefault(), defaultValues)
