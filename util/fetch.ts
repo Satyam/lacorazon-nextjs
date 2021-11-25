@@ -29,12 +29,12 @@ type FetchOpReply<T> = {
   error?: FetchError;
 };
 
-export const localFetch = async (
+export const localFetch = async <T extends Record<string, any>>(
   url: string,
   config?: RequestInit
-): Promise<FetchOpReply<User>> => {
+): Promise<FetchOpReply<T>> => {
   return fetch(`${window.origin}${url}`, config).then(
-    async (res): Promise<FetchOpReply<User>> => {
+    async (res): Promise<FetchOpReply<T>> => {
       if (res.ok) {
         return { data: await res.json() };
       } else {
@@ -43,15 +43,3 @@ export const localFetch = async (
     }
   );
 };
-
-import type { User } from 'data/types';
-const API_USERS = '/api/users';
-
-export const useListUsers = () => useSWR<User[], Error>(API_USERS);
-
-export const deleteUser = (id: ID) =>
-  localFetch(`${API_USERS}/${id}`, { method: 'DELETE' });
-
-export const getUser = (id: ID) => localFetch(`${API_USERS}/${id}`);
-
-export const useGetUser = (id: ID) => useSWR<User, Error>(`${API_USERS}/${id}`);
