@@ -5,7 +5,7 @@ import Layout from 'components/Layout';
 import { Loading, Alert, useModals } from 'components/Modals';
 // import { Accordion, AccordionPanel } from 'Components/Accordion';
 // import ListVentas from 'Components/ventas/ListVentas';
-import { useGetUser, FetchError } from 'util/fetch';
+import { useGetUser, FetchError } from './utils';
 
 const ShowUser = () => {
   const router = useRouter();

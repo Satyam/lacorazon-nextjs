@@ -1,7 +1,7 @@
 import React from 'react';
 import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
-import { useListUsers, deleteUser } from 'util/fetch';
+import { useListUsers, deleteUser } from './utils';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -25,7 +25,7 @@ const ListUsers = () => {
 
   const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
-    router.push(`/users/new`);
+    router.push(`/users/edit/new`);
   };
   const onShow: React.MouseEventHandler<HTMLTableCellElement> = (ev) => {
     ev.stopPropagation();
