@@ -15,7 +15,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       }}
     >
       <ModalsProvider>
-        <Component {...pageProps} />;
+        <Component {...pageProps} />
       </ModalsProvider>
     </SWRConfig>
   );
