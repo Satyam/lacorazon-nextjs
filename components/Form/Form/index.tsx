@@ -12,6 +12,11 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import invariant from 'invariant';
 import { AnyObjectSchema } from 'yup';
 
+export type OnFormSubmitFunction<V extends Record<string, any>> = (
+  data: V,
+  formReturn: UseFormReturn<V>
+) => Promise<void> | void;
+
 export default function Form<V extends Record<string, any>>({
   mode,
   reValidateMode,
@@ -28,12 +33,12 @@ export default function Form<V extends Record<string, any>>({
   ...rest
 }: UseFormProps<V> & {
   schema?: AnyObjectSchema;
-  onSubmit: (values: V, formMethods: UseFormReturn<V>) => Promise<void> | void;
+  onSubmit: OnFormSubmitFunction<V>;
   inline?: boolean;
   className?: string;
   children?: React.ReactNode;
 }): React.ReactElement {
-  const methods = useForm<V>({
+  const formReturn = useForm<V>({
     defaultValues: schema
       ? Object.assign(schema.getDefault(), defaultValues)
       : defaultValues,
@@ -51,7 +56,7 @@ export default function Form<V extends Record<string, any>>({
   const [status, setStatus] = useState<string | undefined>();
 
   const mySubmit: SubmitHandler<V> = (values) => {
-    const result = onSubmit(values as V, methods);
+    const result = onSubmit(values as V, formReturn);
     if (result instanceof Promise) {
       return result.catch((err: any) => {
         console.error(err);
@@ -61,11 +66,11 @@ export default function Form<V extends Record<string, any>>({
     return;
   };
   return (
-    <FormProvider {...methods}>
+    <FormProvider {...formReturn}>
       <BSForm
         noValidate
-        onSubmit={methods.handleSubmit(mySubmit)}
-        onReset={() => methods.reset()}
+        onSubmit={formReturn.handleSubmit(mySubmit)}
+        onReset={() => formReturn.reset()}
         className={className}
         {...rest}
       >
