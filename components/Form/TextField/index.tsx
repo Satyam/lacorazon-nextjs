@@ -33,7 +33,11 @@ const TextField: React.FC<{
   const error = hasError && (errors[name]?.message || errors[name]);
 
   return (
-    <Form.Group as={Row} controlId={actualId.current}>
+    <Form.Group
+      as={Row}
+      controlId={actualId.current}
+      className={styles.formGroup}
+    >
       <Form.Label column xs={12} lg={2}>
         {label}
       </Form.Label>
@@ -47,7 +51,7 @@ const TextField: React.FC<{
           {...rest}
         />
         {help && <Form.Text>{help}</Form.Text>}
-        <Form.Control.Feedback>{error}</Form.Control.Feedback>
+        <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
       </Col>
     </Form.Group>
   );
