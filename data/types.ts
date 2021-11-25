@@ -1,14 +1,6 @@
-export type ID = string | number;
-
 export type Fila = Consignacion | Distribuidor | Salida | User | Venta;
 
-export type RecordWithId = { id: ID; [key: string]: unknown };
-
 export type Rango = { offset?: number; limit?: number; last?: number };
-
-export type unused = unknown;
-
-export type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 
 /*
 CREATE TABLE Consigna (
