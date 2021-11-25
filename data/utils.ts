@@ -3,7 +3,7 @@ import type { Database } from 'sqlite';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 
-import { RecordWithId, Rango, PartialExcept } from './types';
+import { Rango } from './types';
 import { join } from 'path';
 let _db: Database;
 
@@ -45,14 +45,15 @@ export async function getById<R extends RecordWithId>(
   return db.get(`select ${f} from ${nombreTabla} where id = ?`, [id]);
 }
 
-export async function createWithAutoId<R extends RecordWithId>(
+export async function createWithAutoId<R extends RecordWithoutId>(
   nombreTabla: string,
   fila: Omit<R, 'id'>,
 
   camposSalida?: Array<keyof R>
 ): Promise<R | undefined> {
-  const fields = Object.keys(fila);
-  const values = Object.values(fila);
+  const { id: _, ...rest } = fila;
+  const fields = Object.keys(rest);
+  const values = Object.values(rest);
   const db = await getDb();
   const response = await db.run(
     `insert into ${nombreTabla} (${fields}) values (${Array(fields.length)
@@ -61,20 +62,22 @@ export async function createWithAutoId<R extends RecordWithId>(
     values
   );
   if (response.lastID)
-    return getById(nombreTabla, response.lastID, camposSalida);
+    return getById<R & { id: ID }>(nombreTabla, response.lastID, camposSalida);
   return undefined;
 }
 
-export async function createWithCuid<R extends RecordWithId>(
+export async function createWithCuid<R extends RecordWithoutId>(
   nombreTabla: string,
   fila: R,
 
   camposSalida?: Array<keyof R>
 ): Promise<R | undefined> {
   const id = cuid();
-  const fields = Object.keys(fila);
-  const values = Object.values(fila);
+  const { id: _, ...rest } = fila;
+  const fields = Object.keys(rest);
+  const values = Object.values(rest);
   const db = await getDb();
+
   await db.run(
     `insert into ${nombreTabla} (id, ${fields.join(',')}) values (${Array(
       fields.length + 1
@@ -83,7 +86,7 @@ export async function createWithCuid<R extends RecordWithId>(
       .join(',')})`,
     [id, ...values]
   );
-  return getById(nombreTabla, id, camposSalida);
+  return getById<R & { id: ID }>(nombreTabla, id, camposSalida);
 }
 
 export async function updateById<R extends RecordWithId>(
