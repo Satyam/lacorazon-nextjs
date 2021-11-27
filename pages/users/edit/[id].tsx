@@ -25,7 +25,6 @@ const userSchema = yup.object().shape({
 
 export default function EditUser() {
   const router = useRouter();
-  const { alert } = useModals();
   const idUser = router.query.id as ID;
   const id: ID | undefined = idUser === 'new' ? undefined : idUser;
 
@@ -34,7 +33,7 @@ export default function EditUser() {
   const { openLoading, closeLoading, confirmDelete } = useModals();
   // const { can } = useAuth0();
 
-  if (error) {
+  const handleGetError = (error: Error) => {
     if (error instanceof FetchError && error.status === 404) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
@@ -47,7 +46,8 @@ export default function EditUser() {
         {error.message}
       </Alert>
     );
-  }
+  };
+  if (error) return handleGetError(error);
 
   if (id && !user) return <Loading>Cargando usuario</Loading>;
 
@@ -56,24 +56,7 @@ export default function EditUser() {
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () => {
       deleteUser(id as string).then(({ data, error }) => {
-        if (error) {
-          if (error instanceof FetchError && error.status === 404) {
-            return (
-              <Alert heading="No existe" warning onClose={() => router.back()}>
-                El vendedor ya había sido borrado
-              </Alert>
-            );
-          }
-          return (
-            <Alert
-              warning
-              heading="Error Desconocido"
-              onClose={() => router.back()}
-            >
-              {error.message}
-            </Alert>
-          );
-        }
+        if (error) return handleGetError(error);
         router.back();
       });
     });
@@ -83,54 +66,46 @@ export default function EditUser() {
     values,
     formReturn
   ) => {
+    const handleUpsertError = (error: Error) => {
+      if (error instanceof FetchError) {
+        switch (error.status) {
+          case 404:
+            return (
+              <Alert heading="No existe" warning onClose={() => router.back()}>
+                El vendedor ya había sido borrado
+              </Alert>
+            );
+          case 409:
+            formReturn.setError('nombre', {
+              type: 'duplicado',
+              message: 'Ese nombre ya existe',
+            });
+            return (
+              <Alert heading="Duplicado" warning onClose={() => undefined}>
+                Ya existe un vendedor con ese mismo nombre
+              </Alert>
+            );
+        }
+      }
+      return (
+        <Alert warning heading="Error Desconocido" onClose={() => undefined}>
+          {error.message}
+        </Alert>
+      );
+    };
+
     if (id) {
       openLoading('Actualizando usuario');
       await upsertUser({ id, ...values })
-        .then(({ data, error }) => {
-          if (error instanceof FetchError) {
-            switch (error.status) {
-              case 404:
-                return (
-                  <Alert
-                    heading="No existe"
-                    warning
-                    onClose={() => router.back()}
-                  >
-                    El vendedor ya había sido borrado
-                  </Alert>
-                );
-              case 409:
-                formReturn.setError('nombre', {
-                  type: 'duplicado',
-                  message: 'Ese nombre ya existe',
-                });
-                return (
-                  <Alert heading="Duplicado" warning onClose={() => undefined}>
-                    Ya existe un vendedor con ese mismo nombre
-                  </Alert>
-                );
-            }
-          }
+        .then(({ error }) => {
+          if (error) return handleUpsertError(error);
         })
         .finally(closeLoading);
     } else {
       openLoading('Creando usuario');
       await upsertUser({ ...values, password: values.nombre })
         .then(({ data, error }) => {
-          if (error instanceof FetchError) {
-            switch (error.status) {
-              case 409:
-                formReturn.setError('nombre', {
-                  type: 'duplicado',
-                  message: 'Ese nombre ya existe',
-                });
-                return (
-                  <Alert heading="Duplicado" warning onClose={() => undefined}>
-                    Ya existe un vendedor con ese mismo nombre
-                  </Alert>
-                );
-            }
-          }
+          if (error) return handleUpsertError(error);
           router.replace(`/users/edit/${data?.id}`);
         })
         .finally(closeLoading);
