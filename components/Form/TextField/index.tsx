@@ -5,7 +5,7 @@ import classnames from 'classnames';
 import { useFormContext } from 'react-hook-form';
 import invariant from 'invariant';
 
-import styles from './styles.module.css';
+import styles from '../styles.module.css';
 import classNames from 'classnames';
 let counter = 0;
 /**

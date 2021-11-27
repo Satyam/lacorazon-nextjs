@@ -1,0 +1,22 @@
+.formBorder {
+  border: #ced4da solid thin;
+  padding: 0.5rem;
+  margin: 0.5rem;
+  border-radius: 0.3rem;
+}
+
+textarea.formControl {
+  height: 3em;
+}
+
+.formGroup {
+  margin: 0.5rem auto;
+}
+
+.labeled-pre {
+  white-space: pre-line;
+  height: auto;
+}
+.readonly {
+  composes: bg-light from global;
+}

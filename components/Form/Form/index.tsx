@@ -12,6 +12,9 @@ import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import invariant from 'invariant';
 import { AnyObjectSchema } from 'yup';
 
+import classnames from 'classnames';
+import styles from '../styles.module.css';
+
 export type OnFormSubmitFunction<V extends Record<string, any>> = (
   data: V,
   formReturn: UseFormReturn<V>
@@ -71,7 +74,7 @@ export default function Form<V extends Record<string, any>>({
         noValidate
         onSubmit={formReturn.handleSubmit(mySubmit)}
         onReset={() => formReturn.reset()}
-        className={className}
+        className={classnames(className, styles.formBorder)}
         {...rest}
       >
         {status && <Alert color="danger">{status}</Alert>}

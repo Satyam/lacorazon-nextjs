@@ -1,7 +1,0 @@
-.labeled-pre {
-  white-space: pre-line;
-  height: auto;
-}
-.readonly {
-  composes: bg-light from global;
-}

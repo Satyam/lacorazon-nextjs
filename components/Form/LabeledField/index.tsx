@@ -2,7 +2,7 @@ import React, { DOMAttributes } from 'react';
 import { Form, Col, Row } from 'react-bootstrap';
 import classNames from 'classnames/bind';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
-import styles from './styles.module.css';
+import styles from '../styles.module.css';
 
 const cx = classNames.bind(styles);
 
@@ -14,7 +14,7 @@ export const LabeledText: React.FC<
     className?: string;
   } & DOMAttributes<HTMLDivElement>
 > = ({ label, value, children, pre, className, ...rest }) => (
-  <Form.Group as={Row}>
+  <Form.Group as={Row} className={styles.formGroup}>
     <Form.Label column xs={12} lg={2}>
       {label}
     </Form.Label>
@@ -41,7 +41,7 @@ export const LabeledCheckbox: React.FC<{
   checked?: boolean;
   className?: string;
 }> = ({ label, value, checked, className, ...rest }) => (
-  <Form.Group as={Row}>
+  <Form.Group as={Row} className={styles.formGroup}>
     <Form.Label column xs={12} lg={2}>
       {label}
     </Form.Label>
