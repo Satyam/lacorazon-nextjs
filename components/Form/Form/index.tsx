@@ -20,7 +20,21 @@ export type OnFormSubmitFunction<V extends Record<string, any>> = (
   formReturn: UseFormReturn<V>
 ) => Promise<void> | void;
 
-export default function Form<V extends Record<string, any>>({
+export function ReadOnlyForm({
+  className,
+  children,
+  ...rest
+}: {
+  className?: string;
+  children?: React.ReactNode;
+}) {
+  return (
+    <BSForm className={classnames(styles.formBorder, className)} {...rest}>
+      {children}
+    </BSForm>
+  );
+}
+export function Form<V extends Record<string, any>>({
   mode,
   reValidateMode,
   defaultValues,
@@ -74,7 +88,7 @@ export default function Form<V extends Record<string, any>>({
         noValidate
         onSubmit={formReturn.handleSubmit(mySubmit)}
         onReset={() => formReturn.reset()}
-        className={classnames(className, styles.formBorder)}
+        className={classnames(styles.formBorder, className)}
         {...rest}
       >
         {status && <Alert color="danger">{status}</Alert>}

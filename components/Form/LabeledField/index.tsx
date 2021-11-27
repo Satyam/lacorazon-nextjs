@@ -1,10 +1,8 @@
 import React, { DOMAttributes } from 'react';
 import { Form, Col, Row } from 'react-bootstrap';
-import classNames from 'classnames/bind';
+import classnames from 'classnames';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 import styles from '../styles.module.css';
-
-const cx = classNames.bind(styles);
 
 export const LabeledText: React.FC<
   {
@@ -13,24 +11,20 @@ export const LabeledText: React.FC<
     pre?: boolean;
     className?: string;
   } & DOMAttributes<HTMLDivElement>
-> = ({ label, value, children, pre, className, ...rest }) => (
-  <Form.Group as={Row} className={styles.formGroup}>
+> = ({ label, value, children, pre, className }) => (
+  <Form.Group as={Row} className={classnames(styles.formGroup, className)}>
     <Form.Label column xs={12} lg={2}>
       {label}
     </Form.Label>
     <Col xs={12} lg={8}>
-      <div
-        className={cx(
-          'form-control',
-          'readonly',
-          { 'labeled-pre': pre },
-          className
-        )}
-        {...rest}
-      >
-        {value}
-        {children}
-      </div>
+      <Form.Control
+        readOnly
+        plaintext
+        className={classnames(styles.labeledField, {
+          [styles.labeledPre]: pre,
+        })}
+        defaultValue={value || children}
+      />
     </Col>
   </Form.Group>
 );
@@ -41,15 +35,12 @@ export const LabeledCheckbox: React.FC<{
   checked?: boolean;
   className?: string;
 }> = ({ label, value, checked, className, ...rest }) => (
-  <Form.Group as={Row} className={styles.formGroup}>
+  <Form.Group as={Row} className={classnames(styles.formGroup, className)}>
     <Form.Label column xs={12} lg={2}>
       {label}
     </Form.Label>
     <Col xs={12} lg={8}>
-      <div
-        className={classNames('form-control', 'readonly', className)}
-        {...rest}
-      >
+      <div className={styles.labeledField} {...rest}>
         {value || checked ? <FaRegCheckSquare /> : <FaRegSquare />}
       </div>
     </Col>

@@ -1,15 +1,14 @@
 import React from 'react';
 import { useRouter } from 'next/router';
-import { LabeledText } from 'components/Form';
+import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
-import { Loading, Alert, useModals } from 'components/Modals';
+import { Loading, Alert } from 'components/Modals';
 // import { Accordion, AccordionPanel } from 'Components/Accordion';
 // import ListVentas from 'Components/ventas/ListVentas';
 import { useGetUser, FetchError } from './utils';
 
 const ShowUser = () => {
   const router = useRouter();
-  const { alert } = useModals();
   const { id } = router.query;
   const { data: user, error } = useGetUser(id as ID);
 
@@ -35,7 +34,7 @@ const ShowUser = () => {
       heading={`Vendedor`}
       error={error}
     >
-      <>
+      <ReadOnlyForm>
         <LabeledText label="Nombre" value={user.nombre} />
         <LabeledText label="eMail" value={user.email} />
         {/* <Accordion>
@@ -47,7 +46,7 @@ const ShowUser = () => {
               librerías
             </AccordionPanel>
           </Accordion> */}
-      </>
+      </ReadOnlyForm>
     </Layout>
   );
 };

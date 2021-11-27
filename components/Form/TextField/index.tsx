@@ -6,7 +6,7 @@ import { useFormContext } from 'react-hook-form';
 import invariant from 'invariant';
 
 import styles from '../styles.module.css';
-import classNames from 'classnames';
+
 let counter = 0;
 /**
  * Produces a labeled input box within form
@@ -36,7 +36,7 @@ const TextField: React.FC<{
     <Form.Group
       as={Row}
       controlId={actualId.current}
-      className={styles.formGroup}
+      className={classnames(styles.formGroup, className)}
     >
       <Form.Label column xs={12} lg={2}>
         {label}
@@ -46,7 +46,7 @@ const TextField: React.FC<{
           as={rows ? 'textarea' : 'input'}
           type={type}
           isInvalid={hasError}
-          className={classNames(className, styles.formControl)}
+          className={styles.formControl}
           {...register(name)}
           {...rest}
         />
