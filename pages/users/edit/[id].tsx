@@ -55,7 +55,6 @@ export default function EditUser() {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () => {
-      console.log('should delete', id, nombre);
       deleteUser(id as string).then(({ data, error }) => {
         if (error) {
           if (error instanceof FetchError && error.status === 404) {
@@ -86,7 +85,6 @@ export default function EditUser() {
   ) => {
     if (id) {
       openLoading('Actualizando usuario');
-      console.log('should update', id, values);
       await upsertUser({ id, ...values })
         .then(({ data, error }) => {
           if (error instanceof FetchError) {
@@ -117,10 +115,8 @@ export default function EditUser() {
         .finally(closeLoading);
     } else {
       openLoading('Creando usuario');
-      console.log('should create', values);
       await upsertUser({ ...values, password: values.nombre })
         .then(({ data, error }) => {
-          console.log('after insert, upsert returned', { data, error });
           if (error instanceof FetchError) {
             switch (error.status) {
               case 409:
@@ -135,7 +131,7 @@ export default function EditUser() {
                 );
             }
           }
-          router.replace(`/users/edit/${id}`);
+          router.replace(`/users/edit/${data?.id}`);
         })
         .finally(closeLoading);
     }
