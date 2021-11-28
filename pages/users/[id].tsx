@@ -1,15 +1,15 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import { Accordion } from 'react-bootstrap';
 import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
-// import { Accordion, AccordionPanel } from 'Components/Accordion';
-// import ListVentas from 'Components/ventas/ListVentas';
+import ListVentas from 'pages/ventas/index';
 import { useGetUser, FetchError } from './utils';
 
 const ShowUser = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { id } = router.query as { id: ID };
   const { data: user, error } = useGetUser(id as ID);
 
   if (error) {
@@ -37,15 +37,21 @@ const ShowUser = () => {
       <ReadOnlyForm>
         <LabeledText label="Nombre" value={user.nombre} />
         <LabeledText label="eMail" value={user.email} />
-        {/* <Accordion>
-            <AccordionPanel label="Ventas" name="ventas">
+        <Accordion>
+          <Accordion.Item eventKey="ventas">
+            <Accordion.Header>Ventas</Accordion.Header>
+            <Accordion.Body>
               <ListVentas idVendedor={id} nombreVendedor={user.nombre} wide />
-            </AccordionPanel>
-            <AccordionPanel label="Consigna" name="consigna">
+            </Accordion.Body>
+          </Accordion.Item>
+          <Accordion.Item eventKey="consigna">
+            <Accordion.Header>Consigna</Accordion.Header>
+            <Accordion.Body>
               Aquí irían los libros que este vendedor tiene en consigna en las
               librerías
-            </AccordionPanel>
-          </Accordion> */}
+            </Accordion.Body>
+          </Accordion.Item>
+        </Accordion>
       </ReadOnlyForm>
     </Layout>
   );
