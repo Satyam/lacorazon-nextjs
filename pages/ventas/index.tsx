@@ -49,7 +49,7 @@ export const TablaVentas: React.FC<{
       <tr key={id}>
         <td align="right" title="Ver detalle esta venta">
           <Link href={`/ventas/${id}`}>
-            <a className="link-dark">{formatDate(venta.fecha)}</a>
+            <a>{formatDate(venta.fecha)}</a>
           </Link>
         </td>
         <td>{venta.concepto}</td>
@@ -58,7 +58,7 @@ export const TablaVentas: React.FC<{
           (venta.vendedor ? (
             <td title={`Ver detalle vendedor: \n${venta.vendedor}`}>
               <Link href={`/users/${venta.idVendedor}`}>
-                <a className="link-dark">{venta.vendedor}</a>
+                <a>{venta.vendedor}</a>
               </Link>
             </td>
           ) : (

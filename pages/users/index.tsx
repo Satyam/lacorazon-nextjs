@@ -56,7 +56,7 @@ const ListUsers = () => {
       <tr key={id}>
         <td title={`Ver detalles\n${user.nombre}`}>
           <Link href={`/users/${id}`}>
-            <a className="link-dark">{user.nombre}</a>
+            <a>{user.nombre}</a>
           </Link>
         </td>
         <td>{user.email}</td>
