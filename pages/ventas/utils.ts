@@ -5,19 +5,18 @@ import { localFetch } from 'util/fetch';
 
 export { FetchError } from 'util/fetch';
 import type { Venta } from 'data/types';
+export type VentaVendedor = Venta & { vendedor?: string };
+
 const API_VENTAS = '/api/ventas';
 
 const ventasMiddleware: Middleware = (useSWRNext) => {
   return (key, fetcher, config) => {
-    // Before hook runs...
-
-    // Handle the next middleware, or the `useSWR` hook if this is the last one.
     const swr = useSWRNext(key, fetcher, config);
 
     if (swr.error || !swr.data) return swr;
 
     // @ts-ignore
-    const ventas = swr.data.map<Venta>((venta) => ({
+    const ventas = swr.data.map<VentaVendedor>((venta) => ({
       ...venta,
       fecha: new Date(venta.fecha),
     }));
@@ -27,7 +26,7 @@ const ventasMiddleware: Middleware = (useSWRNext) => {
   };
 };
 export const useListVentas = (idVendedor?: ID) =>
-  useSWR<Venta[], Error>(
+  useSWR<VentaVendedor[], Error>(
     idVendedor ? `${API_VENTAS}?idVendedor=${idVendedor}` : API_VENTAS,
     { use: [ventasMiddleware] }
   );

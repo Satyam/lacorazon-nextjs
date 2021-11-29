@@ -1,8 +1,7 @@
-import { Venta, Rango } from './types';
+import { Venta } from './types';
 import {
   getDb,
   getById,
-  getAllLimitOffset,
   createWithCuid,
   updateById,
   deleteById,
@@ -10,17 +9,21 @@ import {
 
 const TABLE = 'Ventas';
 
-export async function list(rango: Rango, idVendedor?: ID) {
+export async function list(idVendedor?: ID) {
+  const db = await getDb();
   if (idVendedor) {
-    const db = await getDb();
     return db.all(
-      'select * from Ventas where idVendedor = $idVendedor order by fecha, id',
+      `select * from ${TABLE} where idVendedor = $idVendedor order by fecha, id`,
       {
         $idVendedor: idVendedor,
       }
     );
   }
-  return getAllLimitOffset<Venta>(TABLE, rango);
+  return db.all(`
+    select Ventas.*, Users.nombre as vendedor from Ventas 
+    inner join Users on Ventas.idVendedor = Users.id  
+    order by fecha, id
+  `);
 }
 
 export function del(id: ID) {
