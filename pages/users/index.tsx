@@ -1,6 +1,7 @@
 import React from 'react';
 import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { useListUsers, deleteUser } from './utils';
 import {
   ButtonIconAdd,
@@ -27,10 +28,7 @@ const ListUsers = () => {
     ev.stopPropagation();
     router.push(`/users/edit/new`);
   };
-  const onShow: React.MouseEventHandler<HTMLTableCellElement> = (ev) => {
-    ev.stopPropagation();
-    router.push(`/users/${ev.currentTarget.dataset.id}`);
-  };
+
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
@@ -60,13 +58,10 @@ const ListUsers = () => {
     const id = user.id;
     return (
       <tr key={id}>
-        <td
-          onClick={onShow}
-          data-id={id}
-          className="link"
-          title={`Ver detalles\n${user.nombre}`}
-        >
-          {user.nombre}
+        <td title={`Ver detalles\n${user.nombre}`}>
+          <Link href={`/users/${id}`}>
+            <a className="link-dark">{user.nombre}</a>
+          </Link>
         </td>
         <td>{user.email}</td>
         <td align="center">

@@ -1,5 +1,6 @@
 import React from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import { Table, ButtonGroup } from 'react-bootstrap';
 import { FaRegCheckSquare, FaRegSquare } from 'react-icons/fa';
 
@@ -31,10 +32,6 @@ export const TablaVentas: React.FC<{
   if (error) return <div>failed to load</div>;
   if (!ventas) return <Loading>Cargando ventas</Loading>;
 
-  const onShow: React.MouseEventHandler<HTMLElement> = (ev) => {
-    ev.stopPropagation();
-    router.push(`/venta/${ev.currentTarget.dataset.id}`);
-  };
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { fecha, id } = ev.currentTarget.dataset;
@@ -42,11 +39,7 @@ export const TablaVentas: React.FC<{
   };
   const onEdit: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
-    router.push(`/venta/edit/${ev.currentTarget.dataset.id}`);
-  };
-  const onShowVendedor: React.MouseEventHandler<HTMLElement> = (ev) => {
-    ev.stopPropagation();
-    router.push(`/user/${ev.currentTarget.dataset.id}`);
+    router.push(`/ventas/edit/${ev.currentTarget.dataset.id}`);
   };
 
   const rowVenta = (venta: VentaVendedor) => {
@@ -54,26 +47,19 @@ export const TablaVentas: React.FC<{
 
     return (
       <tr key={id}>
-        <td
-          align="right"
-          className="link"
-          onClick={onShow}
-          data-id={id}
-          title="Ver detalle esta venta"
-        >
-          {formatDate(venta.fecha)}
+        <td align="right" title="Ver detalle esta venta">
+          <Link href={`/ventas/${id}`}>
+            <a className="link-dark">{formatDate(venta.fecha)}</a>
+          </Link>
         </td>
         <td>{venta.concepto}</td>
 
         {!idVendedor &&
           (venta.vendedor ? (
-            <td
-              className="link"
-              onClick={onShowVendedor}
-              data-id={venta.idVendedor}
-              title={`Ver detalle vendedor: \n${venta.vendedor}`}
-            >
-              {venta.vendedor}
+            <td title={`Ver detalle vendedor: \n${venta.vendedor}`}>
+              <Link href={`/users/${venta.idVendedor}`}>
+                <a className="link-dark">{venta.vendedor}</a>
+              </Link>
             </td>
           ) : (
             <td>---</td>
