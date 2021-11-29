@@ -1,18 +1,19 @@
 import { User, Rango } from './types';
 import {
   getById,
-  getAllLimitOffset,
   createWithCuid,
   updateById,
   deleteById,
+  getDb,
 } from './utils';
 
 const TABLE = 'Users';
 
 const safeFields: Array<Partial<keyof User>> = ['id', 'nombre', 'email'];
 
-export function list(rango: Rango) {
-  return getAllLimitOffset<User>(TABLE, rango, safeFields);
+export async function list() {
+  const db = await getDb();
+  return db.all(`select ${safeFields.join(',')} from ${TABLE}`);
 }
 
 export function del(id: ID) {

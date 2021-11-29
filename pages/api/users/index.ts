@@ -6,11 +6,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<User[]>
 ) {
-  const { offset, limit, last } = req.query;
-  const data = await list({
-    offset: offset ? Number(offset) : undefined,
-    limit: limit ? Number(limit) : undefined,
-    last: last ? Number(last) : undefined,
-  });
+  const data = await list();
   res.json(data);
 }

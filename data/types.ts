@@ -1,7 +1,5 @@
 export type Fila = Consignacion | Distribuidor | Salida | User | Venta;
 
-export type Rango = { offset?: number; limit?: number; last?: number };
-
 /*
 CREATE TABLE Consigna (
     id integer primary key,

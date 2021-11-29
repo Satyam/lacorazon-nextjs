@@ -3,7 +3,6 @@ import type { Database } from 'sqlite';
 import { open } from 'sqlite';
 import sqlite3 from 'sqlite3';
 
-import { Rango } from './types';
 import { join } from 'path';
 let _db: Database;
 
@@ -15,23 +14,6 @@ export async function getDb() {
     });
   }
   return _db;
-}
-
-export async function getAllLimitOffset<R extends RecordWithId>(
-  nombreTabla: string,
-  { offset = 0, limit }: Rango,
-
-  camposSalida?: Array<keyof R>
-): Promise<R[]> {
-  const f = camposSalida ? camposSalida.join(',') : '*';
-  const db = await getDb();
-  if (limit) {
-    return db.all(
-      `select ${f} from ${nombreTabla} order by nombre limit ? offset ?`,
-      [limit, offset]
-    );
-  }
-  return db.all(`select * from ${nombreTabla} order by nombre`);
 }
 
 export async function getById<R extends RecordWithId>(
