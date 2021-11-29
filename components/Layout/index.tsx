@@ -38,7 +38,7 @@ export default function Layout({
               <h1 className={styles.heading}>{heading}</h1>
               <div className={styles.action}>{action}</div>
             </div>
-            <main>{children}</main>
+            <main className={styles.clear}>{children}</main>
           </Col>
         </Row>
       </Container>
