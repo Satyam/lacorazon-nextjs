@@ -16,14 +16,12 @@ import { Loading } from 'components/Modals';
 import Layout from 'components/Layout';
 import { useModals } from 'components/Modals';
 
-import { useListVentas, deleteVenta } from './utils';
+import { useListVentas, deleteVenta, VentaVendedor } from './utils';
 import type { Venta } from 'data/types';
 
-const ListVentas: React.FC<{
+export const TablaVentas: React.FC<{
   idVendedor?: ID;
-  nombreVendedor?: string;
-  wide?: boolean;
-}> = ({ idVendedor, nombreVendedor, wide }) => {
+}> = ({ idVendedor }) => {
   const router = useRouter();
 
   const { data: ventas, error, mutate } = useListVentas(idVendedor);
@@ -33,10 +31,6 @@ const ListVentas: React.FC<{
   if (error) return <div>failed to load</div>;
   if (!ventas) return <Loading>Cargando ventas</Loading>;
 
-  const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-    ev.stopPropagation();
-    router.push('/venta/new');
-  };
   const onShow: React.MouseEventHandler<HTMLElement> = (ev) => {
     ev.stopPropagation();
     router.push(`/venta/${ev.currentTarget.dataset.id}`);
@@ -55,8 +49,9 @@ const ListVentas: React.FC<{
     router.push(`/user/${ev.currentTarget.dataset.id}`);
   };
 
-  const rowVenta = (venta: Venta) => {
+  const rowVenta = (venta: VentaVendedor) => {
     const id = venta.id;
+
     return (
       <tr key={id}>
         <td
@@ -69,19 +64,20 @@ const ListVentas: React.FC<{
           {formatDate(venta.fecha)}
         </td>
         <td>{venta.concepto}</td>
-        {/* {!idVendedor &&
+
+        {!idVendedor &&
           (venta.vendedor ? (
             <td
               className="link"
               onClick={onShowVendedor}
-              data-id={venta.vendedor.id}
-              title={`Ver detalle vendedor: \n${venta.vendedor.nombre}`}
+              data-id={venta.idVendedor}
+              title={`Ver detalle vendedor: \n${venta.vendedor}`}
             >
-              {venta.vendedor.nombre}
+              {venta.vendedor}
             </td>
           ) : (
             <td>---</td>
-          ))} */}
+          ))}
         <td align="right">{venta.cantidad}</td>
         <td align="right">{formatCurrency(venta.precioUnitario)}</td>
         <td align="center">
@@ -106,6 +102,37 @@ const ListVentas: React.FC<{
   };
 
   return (
+    <Table striped hover size="sm" responsive bordered>
+      <thead>
+        <tr>
+          <th>Fecha</th>
+          <th>Concepto</th>
+          {!idVendedor && <th>Vendedor</th>}
+          <th>Cantidad</th>
+          <th>Precio Unitario</th>
+          <th>IVA</th>
+          <th>Precio Total</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>{(ventas || []).map(rowVenta)}</tbody>
+    </Table>
+  );
+};
+
+const ListVentas: React.FC<{
+  idVendedor?: ID;
+  nombreVendedor?: string;
+  wide?: boolean;
+}> = ({ idVendedor, nombreVendedor, wide }) => {
+  const router = useRouter();
+
+  const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
+    ev.stopPropagation();
+    router.push('/venta/new');
+  };
+
+  return (
     <Layout
       title={idVendedor ? undefined : 'Ventas'}
       heading={nombreVendedor ? `Ventas de ${nombreVendedor}` : 'Ventas'}
@@ -115,23 +142,8 @@ const ListVentas: React.FC<{
           Agregar
         </ButtonIconAdd>
       }
-      error={error}
     >
-      <Table striped hover size="sm" responsive bordered>
-        <thead>
-          <tr>
-            <th>Fecha</th>
-            <th>Concepto</th>
-            {!idVendedor && <th>Vendedor</th>}
-            <th>Cantidad</th>
-            <th>Precio Unitario</th>
-            <th>IVA</th>
-            <th>Precio Total</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>{(ventas || []).map(rowVenta)}</tbody>
-      </Table>
+      <TablaVentas idVendedor={idVendedor} />
     </Layout>
   );
 };

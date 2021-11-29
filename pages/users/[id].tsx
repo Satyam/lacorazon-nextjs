@@ -4,7 +4,7 @@ import { Accordion } from 'react-bootstrap';
 import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
-import ListVentas from 'pages/ventas/index';
+import { TablaVentas } from 'pages/ventas/index';
 import { useGetUser, FetchError } from './utils';
 
 const ShowUser = () => {
@@ -41,7 +41,7 @@ const ShowUser = () => {
           <Accordion.Item eventKey="ventas">
             <Accordion.Header>Ventas</Accordion.Header>
             <Accordion.Body>
-              <ListVentas idVendedor={id} nombreVendedor={user.nombre} wide />
+              <TablaVentas idVendedor={id} />
             </Accordion.Body>
           </Accordion.Item>
           <Accordion.Item eventKey="consigna">
