@@ -15,10 +15,9 @@ import { formatDate, formatCurrency } from 'util/format';
 
 import { Loading } from 'components/Modals';
 import Layout from 'components/Layout';
-import { useModals } from 'components/Modals';
+import { useModals, Alert } from 'components/Modals';
 
 import { useListVentas, deleteVenta, VentaVendedor } from './utils';
-import type { Venta } from 'data/types';
 
 export const TablaVentas: React.FC<{
   idVendedor?: ID;
@@ -29,7 +28,12 @@ export const TablaVentas: React.FC<{
 
   const { confirmDelete } = useModals();
 
-  if (error) return <div>failed to load</div>;
+  if (error)
+    return (
+      <Alert warning heading="Desconocido" onClose={() => router.back()}>
+        {error.message}
+      </Alert>
+    );
   if (!ventas) return <Loading>Cargando ventas</Loading>;
 
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {

@@ -116,7 +116,6 @@ export default function EditUser() {
     <Layout
       title={`Vendedor - ${user ? user.nombre : 'nuevo'}`}
       heading={`${id ? 'Edit' : 'Add'} Vendedor`}
-      error={error}
     >
       <Form<UserType>
         defaultValues={user}

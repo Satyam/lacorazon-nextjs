@@ -10,14 +10,12 @@ export default function Layout({
   title,
   heading,
   action,
-  error,
 }: {
   wide?: boolean;
   title?: string;
   heading: string;
   action?: React.ReactNode;
   children: ReactNode;
-  error?: Error;
 }) {
   const t = title ? `La Corazón - ${title}` : 'La Corazón';
   return (
@@ -40,7 +38,6 @@ export default function Layout({
               <h1 className={styles.heading}>{heading}</h1>
               <div className={styles.action}>{action}</div>
             </div>
-            <div className={styles.clear}>{error}</div>
             <main>{children}</main>
           </Col>
         </Row>

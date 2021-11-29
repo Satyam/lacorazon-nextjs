@@ -32,7 +32,6 @@ const ShowUser = () => {
     <Layout
       title={`Vendedor - ${user ? user.nombre : '??'}`}
       heading={`Vendedor`}
-      error={error}
     >
       <ReadOnlyForm>
         <LabeledText label="Nombre" value={user.nombre} />

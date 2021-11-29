@@ -11,7 +11,7 @@ import {
 import Layout from 'components/Layout';
 import type { User } from 'data/types';
 
-import { Loading, useModals } from 'components/Modals';
+import { Loading, useModals, Alert } from 'components/Modals';
 // import { useAuth0 } from 'Providers/Auth';
 
 const ListUsers = () => {
@@ -19,7 +19,12 @@ const ListUsers = () => {
   const { data: users, error, mutate } = useListUsers();
   const { confirmDelete, alert } = useModals();
 
-  if (error) return <div>failed to load</div>;
+  if (error)
+    return (
+      <Alert warning heading="Desconocido" onClose={() => router.back()}>
+        {error.message}
+      </Alert>
+    );
   if (!users) return <Loading>Cargando usuarios</Loading>;
 
   // const { can } = useAuth0();
@@ -90,7 +95,6 @@ const ListUsers = () => {
           Agregar
         </ButtonIconAdd>
       }
-      error={error}
     >
       <Table striped hover size="sm" responsive bordered>
         <thead>
