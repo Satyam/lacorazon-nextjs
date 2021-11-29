@@ -41,10 +41,6 @@ export const TablaVentas: React.FC<{
     const { fecha, id } = ev.currentTarget.dataset;
     confirmDelete(`la venta del ${fecha}`, () => deleteVenta(id!));
   };
-  const onEdit: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-    ev.stopPropagation();
-    router.push(`/ventas/edit/${ev.currentTarget.dataset.id}`);
-  };
 
   const rowVenta = (venta: VentaVendedor) => {
     const id = venta.id;
@@ -78,13 +74,15 @@ export const TablaVentas: React.FC<{
         </td>
         <td align="center">
           <ButtonGroup size="sm">
-            <ButtonIconEdit
+            <Link href={`/ventas/edit/${id}`} passHref>
+              <ButtonIconEdit outline />
+            </Link>
+            <ButtonIconDelete
               outline
-              onClick={onEdit}
+              onClick={onDelete}
               data-id={id}
               data-fecha={formatDate(venta.fecha)}
             />
-            <ButtonIconDelete outline onClick={onDelete} data-id={id} />
           </ButtonGroup>
         </td>
       </tr>
@@ -115,22 +113,15 @@ const ListVentas: React.FC<{
   nombreVendedor?: string;
   wide?: boolean;
 }> = ({ idVendedor, nombreVendedor, wide }) => {
-  const router = useRouter();
-
-  const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-    ev.stopPropagation();
-    router.push('/venta/new');
-  };
-
   return (
     <Layout
       title={idVendedor ? undefined : 'Ventas'}
       heading={nombreVendedor ? `Ventas de ${nombreVendedor}` : 'Ventas'}
       wide={wide}
       action={
-        <ButtonIconAdd outline onClick={onAdd}>
-          Agregar
-        </ButtonIconAdd>
+        <Link href="/ventas/edit/new" passHref>
+          <ButtonIconAdd outline>Agregar</ButtonIconAdd>
+        </Link>
       }
     >
       <TablaVentas idVendedor={idVendedor} />

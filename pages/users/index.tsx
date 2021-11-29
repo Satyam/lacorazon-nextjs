@@ -29,11 +29,6 @@ const ListUsers = () => {
 
   // const { can } = useAuth0();
 
-  const onAdd: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-    ev.stopPropagation();
-    router.push(`/users/edit/new`);
-  };
-
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
@@ -54,10 +49,6 @@ const ListUsers = () => {
       })
     );
   };
-  const onEdit: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-    ev.stopPropagation();
-    router.push(`/users/edit/${ev.currentTarget.dataset.id}`);
-  };
 
   const rowUser = (user: User) => {
     const id = user.id;
@@ -71,7 +62,9 @@ const ListUsers = () => {
         <td>{user.email}</td>
         <td align="center">
           <ButtonGroup size="sm">
-            <ButtonIconEdit outline onClick={onEdit} data-id={id} />
+            <Link href={`/users/edit/${id}`} passHref>
+              <ButtonIconEdit outline />
+            </Link>
             {/* {can('user:delete') && ( */}
             <ButtonIconDelete
               outline
@@ -91,9 +84,9 @@ const ListUsers = () => {
       title="Vendedores"
       heading="Vendedores"
       action={
-        <ButtonIconAdd outline onClick={onAdd}>
-          Agregar
-        </ButtonIconAdd>
+        <Link href="/users/edit/new" passHref>
+          <ButtonIconAdd outline>Agregar</ButtonIconAdd>
+        </Link>
       }
     >
       <Table striped hover size="sm" responsive bordered>
