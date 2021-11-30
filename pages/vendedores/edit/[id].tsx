@@ -11,24 +11,29 @@ import {
 import Layout from 'components/Layout';
 import { ButtonIconAdd, ButtonIconDelete, ButtonSet } from 'components/Icons';
 import { Loading, useModals, Alert } from 'components/Modals';
-import { useGetUser, FetchError, upsertUser, deleteUser } from '../utils';
-import type { User } from 'data/types';
+import {
+  useGetVendedor,
+  FetchError,
+  upsertVendedor,
+  deleteVendedor,
+} from '../utils';
+import type { Vendedor } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
 
-type UserType = Omit<Partial<User>, 'password'>;
+type VendedorType = Partial<Vendedor>;
 
-const userSchema = yup.object().shape({
+const vendedorSchema = yup.object().shape({
   email: yup.string().trim().email().default(''),
   nombre: yup.string().trim().required().default(''),
 });
 
-export default function EditUser() {
+export default function EditVendedor() {
   const router = useRouter();
-  const idUser = router.query.id as ID;
-  const id: ID | undefined = idUser === 'new' ? undefined : idUser;
+  const idVendedor = router.query.id as ID;
+  const id: ID | undefined = idVendedor === 'new' ? undefined : idVendedor;
 
-  const { data: user, error } = useGetUser(id as ID);
+  const { data: vendedor, error } = useGetVendedor(id as ID);
 
   const { openLoading, closeLoading, confirmDelete } = useModals();
   // const { can } = useAuth0();
@@ -37,7 +42,7 @@ export default function EditUser() {
     if (error instanceof FetchError && error.status === 404) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
-          El usuario pedido no existe o ha sido borrado
+          El vendedor pedido no existe o ha sido borrado
         </Alert>
       );
     }
@@ -49,20 +54,20 @@ export default function EditUser() {
   };
   if (error) return handleGetError(error);
 
-  if (id && !user) return <Loading>Cargando usuario</Loading>;
+  if (id && !vendedor) return <Loading>Cargando usuario</Loading>;
 
   const onDeleteClick: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () => {
-      deleteUser(id as string).then(({ data, error }) => {
+      deleteVendedor(id as string).then(({ data, error }) => {
         if (error) return handleGetError(error);
         router.back();
       });
     });
   };
 
-  const onSubmit: OnFormSubmitFunction<UserType> = async (
+  const onSubmit: OnFormSubmitFunction<VendedorType> = async (
     values,
     formReturn
   ) => {
@@ -72,7 +77,7 @@ export default function EditUser() {
           case 404:
             return (
               <Alert heading="No existe" warning onClose={() => router.back()}>
-                El usuario ya había sido borrado
+                El vendedor ya había sido borrado
               </Alert>
             );
           case 409:
@@ -82,7 +87,7 @@ export default function EditUser() {
             });
             return (
               <Alert heading="Duplicado" warning onClose={() => undefined}>
-                Ya existe un usuario con ese mismo nombre
+                Ya existe un vendedor con ese mismo nombre
               </Alert>
             );
         }
@@ -95,18 +100,18 @@ export default function EditUser() {
     };
 
     if (id) {
-      openLoading('Actualizando usuario');
-      await upsertUser({ id, ...values })
+      openLoading('Actualizando vendedor');
+      await upsertVendedor({ id, ...values })
         .then(({ error }) => {
           if (error) return handleUpsertError(error);
         })
         .finally(closeLoading);
     } else {
-      openLoading('Creando usuario');
-      await upsertUser({ ...values, password: values.nombre })
+      openLoading('Creando vendedor');
+      await upsertVendedor(values)
         .then(({ data, error }) => {
           if (error) return handleUpsertError(error);
-          router.replace(`/users/edit/${data?.id}`);
+          router.replace(`/vendedores/edit/${data?.id}`);
         })
         .finally(closeLoading);
     }
@@ -114,13 +119,13 @@ export default function EditUser() {
 
   return (
     <Layout
-      title={`Usuario - ${user ? user.nombre : 'nuevo'}`}
-      heading={`${id ? 'Edit' : 'Add'} Usuario`}
+      title={`Vendedor - ${vendedor ? vendedor.nombre : 'nuevo'}`}
+      heading={`${id ? 'Edit' : 'Add'} Vendedor`}
     >
-      <Form<UserType>
-        defaultValues={user}
+      <Form<VendedorType>
+        defaultValues={vendedor}
         onSubmit={onSubmit}
-        schema={userSchema}
+        schema={vendedorSchema}
       >
         <TextField name="nombre" label="Nombre" />
         <TextField name="email" label="eMail" />
@@ -128,10 +133,10 @@ export default function EditUser() {
           <SubmitButton component={ButtonIconAdd}>
             {id ? 'Modificar' : 'Agregar'}
           </SubmitButton>
-          {/* {id && can('user:delete') && ( */}
+          {/* {id && can('vendedor:delete') && ( */}
           <ButtonIconDelete
             data-id={id}
-            data-nombre={user && user.nombre}
+            data-nombre={vendedor && vendedor.nombre}
             onClick={onDeleteClick}
           >
             Borrar

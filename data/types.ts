@@ -82,6 +82,18 @@ export type User = {
   password?: string;
 };
 /*
+CREATE TABLE "Vendedores" (
+	"id"	text NOT NULL UNIQUE,
+	"nombre"	text NOT NULL,
+	"email"	text
+);
+*/
+export type Vendedor = {
+  id: ID;
+  nombre: string;
+  email?: string;
+};
+/*
  CREATE TABLE Ventas (
    id integer primary key,
    concepto text default '',

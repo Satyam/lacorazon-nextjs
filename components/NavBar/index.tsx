@@ -43,6 +43,11 @@ export default function NavBar() {
                 </Link>
               </Nav.Item>
               <Nav.Item>
+                <Link href="/vendedores" passHref>
+                  <Nav.Link>Vendedores</Nav.Link>
+                </Link>
+              </Nav.Item>
+              <Nav.Item>
                 <Link href="/distribuidores" passHref>
                   <Nav.Link>Distribuidores</Nav.Link>
                 </Link>

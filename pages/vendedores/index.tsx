@@ -2,21 +2,21 @@ import React from 'react';
 import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useListUsers, deleteUser } from './utils';
+import { useListVendedores, deleteVendedor } from './utils';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
   ButtonIconDelete,
 } from 'components/Icons';
 import Layout from 'components/Layout';
-import type { User } from 'data/types';
+import type { Vendedor } from 'data/types';
 
 import { Loading, useModals, Alert } from 'components/Modals';
 // import { useAuth0 } from 'Providers/Auth';
 
-const ListUsers = () => {
+const ListVendedoress = () => {
   const router = useRouter();
-  const { data: users, error, mutate } = useListUsers();
+  const { data: vendedores, error, mutate } = useListVendedores();
   const { confirmDelete, alert } = useModals();
 
   if (error)
@@ -25,20 +25,20 @@ const ListUsers = () => {
         {error.message}
       </Alert>
     );
-  if (!users) return <Loading>Cargando usuarios</Loading>;
+  if (!vendedores) return <Loading>Cargando vendedores</Loading>;
 
   // const { can } = useAuth0();
 
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
-    confirmDelete(`al usuario ${nombre}`, () =>
-      deleteUser(id as string).then((res) => {
+    confirmDelete(`al vendedor ${nombre}`, () =>
+      deleteVendedor(id as string).then((res) => {
         if (res.error) {
           if (res.error.status === 404) {
             alert(
               'No existe',
-              `El usuario "${nombre}" no existe o ha sido borrado`,
+              `El vendedor "${nombre}" no existe o ha sido borrado`,
               true,
               () => {}
             );
@@ -50,27 +50,27 @@ const ListUsers = () => {
     );
   };
 
-  const rowUser = (user: User) => {
-    const id = user.id;
+  const rowVendedores = (vendedor: Vendedor) => {
+    const id = vendedor.id;
     return (
       <tr key={id}>
-        <td title={`Ver detalles\n${user.nombre}`}>
-          <Link href={`/users/${id}`}>
-            <a>{user.nombre}</a>
+        <td title={`Ver detalles\n${vendedor.nombre}`}>
+          <Link href={`/vendedores/${id}`}>
+            <a>{vendedor.nombre}</a>
           </Link>
         </td>
-        <td>{user.email}</td>
+        <td>{vendedor.email}</td>
         <td align="center">
           <ButtonGroup size="sm">
-            <Link href={`/users/edit/${id}`} passHref>
+            <Link href={`/vendedores/edit/${id}`} passHref>
               <ButtonIconEdit outline />
             </Link>
-            {/* {can('user:delete') && ( */}
+            {/* {can('vendedor:delete') && ( */}
             <ButtonIconDelete
               outline
               onClick={onDelete}
               data-id={id}
-              data-nombre={user.nombre}
+              data-nombre={vendedor.nombre}
             />
             {/* )} */}
           </ButtonGroup>
@@ -81,10 +81,10 @@ const ListUsers = () => {
 
   return (
     <Layout
-      title="Usuarios"
-      heading="Usuarios"
+      title="Vendedores"
+      heading="Vendedores"
       action={
-        <Link href="/users/edit/new" passHref>
+        <Link href="/vendedores/edit/new" passHref>
           <ButtonIconAdd outline>Agregar</ButtonIconAdd>
         </Link>
       }
@@ -97,12 +97,12 @@ const ListUsers = () => {
             <th />
           </tr>
         </thead>
-        <tbody>{(users || []).map(rowUser)}</tbody>
+        <tbody>{(vendedores || []).map(rowVendedores)}</tbody>
       </Table>
     </Layout>
   );
 };
 
-export default ListUsers;
+export default ListVendedoress;
 
-ListUsers.whyDidYouRender = false;
+ListVendedoress.whyDidYouRender = false;
