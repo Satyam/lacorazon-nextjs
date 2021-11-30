@@ -1,4 +1,4 @@
-import { User, Rango } from './types';
+import { User } from './types';
 import {
   getById,
   createWithCuid,
