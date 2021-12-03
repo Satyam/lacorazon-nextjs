@@ -24,6 +24,18 @@ export function get(id: ID) {
   return getById<User>(TABLE, id, safeFields);
 }
 
+export async function checkValidUser(
+  nombre: string,
+  password: string
+): Promise<User | undefined> {
+  const db = await getDb();
+  return db.get(
+    `select ${safeFields.join(',')}
+     from ${TABLE} where nombre = ? and password= ?`,
+    [nombre, password]
+  );
+}
+
 export function create(user: User) {
   return createWithCuid<User>(TABLE, user, safeFields);
 }
