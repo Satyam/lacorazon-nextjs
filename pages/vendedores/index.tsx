@@ -2,7 +2,7 @@ import React from 'react';
 import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { useListVendedores, deleteVendedor } from './utils';
+import { useListVendedores, deleteVendedor } from 'lib/vendedores';
 import {
   ButtonIconAdd,
   ButtonIconEdit,

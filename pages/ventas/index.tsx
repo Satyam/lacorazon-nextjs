@@ -11,7 +11,7 @@ import {
 } from 'components/Icons';
 // import { useIntl } from 'Providers/Intl';
 
-import { formatDate, formatCurrency } from 'util/format';
+import { formatDate, formatCurrency } from 'lib/format';
 
 import { Loading } from 'components/Modals';
 import Layout from 'components/Layout';

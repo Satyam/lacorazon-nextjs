@@ -11,7 +11,7 @@ import {
 import Layout from 'components/Layout';
 import { ButtonIconAdd, ButtonIconDelete, ButtonSet } from 'components/Icons';
 import { Loading, useModals, Alert } from 'components/Modals';
-import { useGetUser, FetchError, upsertUser, deleteUser } from '../utils';
+import { useGetUser, FetchError, upsertUser, deleteUser } from 'lib/users';
 import type { User } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';

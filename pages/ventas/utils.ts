@@ -1,9 +1,9 @@
 import type { GetStaticProps } from 'next';
 import useSWR, { Middleware, SWRHook } from 'swr';
 
-import { localFetch } from 'util/fetch';
+import { localFetch } from 'lib/fetch';
 
-export { FetchError } from 'util/fetch';
+export { FetchError } from 'lib/fetch';
 import type { Venta } from 'data/types';
 export type VentaVendedor = Venta & { vendedor?: string };
 

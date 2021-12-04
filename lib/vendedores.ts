@@ -1,9 +1,9 @@
 import type { GetStaticProps } from 'next';
 import useSWR from 'swr';
 
-import { localFetch } from 'util/fetch';
+import { localFetch } from 'lib/fetch';
 
-export { FetchError } from 'util/fetch';
+export { FetchError } from 'lib/fetch';
 import type { Vendedor } from 'data/types';
 const API_VENDEDORES = '/api/vendedores';
 

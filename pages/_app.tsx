@@ -2,7 +2,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import { SWRConfig } from 'swr';
 import type { AppProps } from 'next/app';
 import { ModalsProvider } from 'components/Modals/Provider';
-import { swrFetcher } from 'util/fetch';
+import { swrFetcher } from 'lib/fetch';
 
 import '../styles/globals.css';
 

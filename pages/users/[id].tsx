@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
-import { useGetUser, FetchError } from './utils';
+import { useGetUser, FetchError } from 'lib/users';
 
 const ShowUser = () => {
   const router = useRouter();

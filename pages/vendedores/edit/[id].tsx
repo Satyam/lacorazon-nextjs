@@ -16,7 +16,7 @@ import {
   FetchError,
   upsertVendedor,
   deleteVendedor,
-} from '../utils';
+} from 'lib/vendedores';
 import type { Vendedor } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';

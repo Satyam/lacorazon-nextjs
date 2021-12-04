@@ -1,8 +1,8 @@
 import React from 'react';
 import * as yup from 'yup';
-import { localFetch } from 'util/fetch';
+import { localFetch } from 'lib/fetch';
 
-import { FetchError } from 'util/fetch';
+import { FetchError } from 'lib/fetch';
 import {
   Form,
   TextField,

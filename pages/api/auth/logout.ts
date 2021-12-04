@@ -1,7 +1,7 @@
 import { withIronSessionApiRoute } from 'iron-session/next';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { options } from './login';
+import sessionOptions from 'lib/auth';
 
 export default withIronSessionApiRoute(function logoutRoute(
   req: NextApiRequest,
@@ -10,4 +10,4 @@ export default withIronSessionApiRoute(function logoutRoute(
   req.session.destroy();
   res.end();
 },
-options);
+sessionOptions);

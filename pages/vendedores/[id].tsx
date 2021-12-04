@@ -5,7 +5,7 @@ import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
 import { TablaVentas } from 'pages/ventas/index';
-import { useGetVendedor, FetchError } from './utils';
+import { useGetVendedor, FetchError } from 'lib/vendedores';
 
 const ShowVendedores = () => {
   const router = useRouter();
