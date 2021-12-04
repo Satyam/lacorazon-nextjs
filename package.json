@@ -15,14 +15,14 @@
     "date-fns": "^2.25.0",
     "invariant": "^2.2.4",
     "iron-session": "^6.0.4",
-    "next": "12.0.4",
+    "next": "^12.0.6",
     "react": "17.0.2",
     "react-bootstrap": "^2.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "^7.19.5",
     "react-icons": "^4.3.1",
     "sqlite": "^4.0.23",
-    "sqlite3": "^5.0.2",
+    "sqlite3": "^4.2.0",
     "swr": "^1.0.1",
     "yup": "^0.32.11"
   },
@@ -31,8 +31,8 @@
     "@types/node": "^16.11.9",
     "@types/react": "^17.0.36",
     "@types/yup": "^0.29.13",
-    "eslint": "^7.32.0",
-    "eslint-config-next": "12.0.4",
+    "eslint": "^8.4.0",
+    "eslint-config-next": "^12.0.6",
     "typescript": "^4.5.2"
   }
 }
