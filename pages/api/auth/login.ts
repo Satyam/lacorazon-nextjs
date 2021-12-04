@@ -6,14 +6,14 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from 'data/types';
 
 export type LoginFormInfo = {
-  nombre: string;
+  email: string;
   password: string;
 };
 
 export default withIronSessionApiRoute(
   async (req: NextApiRequest, res: NextApiResponse<User | undefined>) => {
-    const { nombre, password } = JSON.parse(req.body) as LoginFormInfo;
-    const user = await checkValidUser(nombre, password);
+    const { email, password } = JSON.parse(req.body) as LoginFormInfo;
+    const user = await checkValidUser(email, password);
     if (user) {
       req.session.user = user;
       await req.session.save();

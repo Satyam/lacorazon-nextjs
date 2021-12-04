@@ -6,6 +6,7 @@ import {
   deleteById,
   getDb,
 } from './utils';
+import hash from 'lib/hash';
 
 const TABLE = 'Users';
 
@@ -25,21 +26,26 @@ export function get(id: ID) {
 }
 
 export async function checkValidUser(
-  nombre: string,
+  email: string,
   password: string
 ): Promise<User | undefined> {
   const db = await getDb();
+  db.on('trace', console.info);
   return db.get(
     `select ${safeFields.join(',')}
-     from ${TABLE} where nombre = ? and password= ?`,
-    [nombre, password]
+     from ${TABLE} where lower(email) = lower(?) and password = ?`,
+    [email, hash(password.toLowerCase())]
   );
 }
 
+function hashPassword(user: User) {
+  return user.password ? { ...user, password: hash(user.password) } : user;
+}
+
 export function create(user: User) {
-  return createWithCuid<User>(TABLE, user, safeFields);
+  return createWithCuid<User>(TABLE, hashPassword(user), safeFields);
 }
 
 export function update(user: User) {
-  return updateById<User>(TABLE, user, safeFields);
+  return updateById<User>(TABLE, hashPassword(user), safeFields);
 }
