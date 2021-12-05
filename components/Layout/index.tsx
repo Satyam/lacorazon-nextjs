@@ -3,18 +3,20 @@ import { Container, Row, Col } from 'react-bootstrap';
 import Head from 'next/head';
 import Navbar from 'components/NavBar';
 import styles from './styles.module.css';
-
+import type { User } from 'data/types';
 export default function Layout({
   wide,
   children,
   title,
   heading,
   action,
+  user,
 }: {
   wide?: boolean;
   title?: string;
   heading: string;
   action?: React.ReactNode;
+  user?: User;
   children: ReactNode;
 }) {
   const t = title ? `La Corazón - ${title}` : 'La Corazón';
@@ -30,7 +32,7 @@ export default function Layout({
           type="image/png"
         ></link>
       </Head>
-      <Navbar />
+      <Navbar user={user} />
       <Container fluid>
         <Row>
           <Col sm="12" md={{ span: wide ? 12 : 8, offset: wide ? 0 : 2 }}>

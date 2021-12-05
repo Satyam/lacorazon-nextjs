@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import * as yup from 'yup';
-import { localFetch } from 'lib/fetch';
-
-import { FetchError } from 'lib/fetch';
+import { localFetch, FetchError } from 'lib/fetch';
+import { useRouter } from 'next/router';
 import {
   Form,
   TextField,
@@ -28,6 +27,7 @@ const API_LOGIN = '/api/auth/login';
 export default function Login() {
   const { openLoading, closeLoading } = useModals();
   const [unauthorized, setUnauthorized] = useState(false);
+  const router = useRouter();
 
   const onSubmit: OnFormSubmitFunction<LoginFormInfo> = async (values) => {
     console.log({ values });
@@ -42,6 +42,11 @@ export default function Login() {
         setUnauthorized(true);
       } else {
         throw error;
+      }
+    } else {
+      const ret = router.query.return;
+      if (typeof ret === 'string') {
+        router.replace(ret);
       }
     }
     closeLoading();

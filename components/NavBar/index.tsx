@@ -12,10 +12,10 @@ import {
   // DropdownItem,
 } from 'react-bootstrap';
 import { FaUser } from 'react-icons/fa';
-
+import type { User } from 'data/types';
 import styles from './styles.module.css';
 
-export default function NavBar() {
+export default function NavBar({ user }: { user?: User }) {
   // const { isAuthenticated, loginWithPopup, logout, user } = useAuth0();
   // const { locale, setLocale, locales } = useIntl();
   return (
@@ -102,6 +102,17 @@ export default function NavBar() {
                 </>
               )}
             </UncontrolledDropdown> */}
+            </Nav>
+            <Nav className="justify-content-end">
+              <Nav.Item>
+                {user?.id ? (
+                  user.nombre
+                ) : (
+                  <Link href="/login?return=/" passHref>
+                    <Nav.Link>Login</Nav.Link>
+                  </Link>
+                )}
+              </Nav.Item>
             </Nav>
           </Navbar.Collapse>
         </Container>
