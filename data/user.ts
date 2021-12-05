@@ -30,7 +30,6 @@ export async function checkValidUser(
   password: string
 ): Promise<User | undefined> {
   const db = await getDb();
-  db.on('trace', console.info);
   return db.get(
     `select ${safeFields.join(',')}
      from ${TABLE} where lower(email) = lower(?) and password = ?`,
