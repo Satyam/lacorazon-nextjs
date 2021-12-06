@@ -17,7 +17,11 @@ export class FetchError extends Error {
 export const swrFetcher = (url: string, config?: RequestInit) => {
   return fetch(url, config).then((res) => {
     if (res.ok) {
-      return res.json();
+      try {
+        return res.json();
+      } catch (_) {
+        return {};
+      }
     } else {
       throw new FetchError(res);
     }
@@ -36,7 +40,11 @@ export const localFetch = async <T extends Record<string, any>>(
   return fetch(`${window.origin}${url}`, config).then(
     async (res): Promise<FetchOpReply<T>> => {
       if (res.ok) {
-        return { data: await res.json() };
+        try {
+          return { data: await res.json() };
+        } catch (_) {
+          return {};
+        }
       } else {
         return { error: new FetchError(res) };
       }
