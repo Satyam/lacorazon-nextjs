@@ -10,7 +10,8 @@ import {
 } from 'components/Form';
 import Layout from 'components/Layout';
 import { useModals, Alert } from 'components/Modals';
-import type { LoginFormInfo } from 'pages/api/auth/login';
+import { LoginFormInfo, useAuth } from 'components/AuthProvider';
+
 import type { User } from 'data/types';
 
 const loginSchema = yup.object().shape({
@@ -26,16 +27,14 @@ const API_LOGIN = '/api/auth/login';
  */
 export default function Login() {
   const { openLoading, closeLoading } = useModals();
+  const { login } = useAuth();
   const [unauthorized, setUnauthorized] = useState(false);
   const router = useRouter();
 
   const onSubmit: OnFormSubmitFunction<LoginFormInfo> = async (values) => {
     console.log({ values });
     openLoading('Verificando usuario');
-    const { data: user, error } = await localFetch<User>(API_LOGIN, {
-      method: 'PUT',
-      body: JSON.stringify(values),
-    });
+    const { user, error } = await login(values);
     console.log({ user, error });
     if (error) {
       if (error instanceof FetchError && error.status === 401) {

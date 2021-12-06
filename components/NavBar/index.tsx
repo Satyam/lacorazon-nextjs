@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import Image from 'next/image';
 import classNames from 'classnames';
 import {
   Navbar,
   Nav,
   Container,
+  NavDropdown,
   // UncontrolledDropdown,
   // DropdownToggle,
   // DropdownMenu,
@@ -13,11 +15,27 @@ import {
 } from 'react-bootstrap';
 import { FaUser } from 'react-icons/fa';
 import type { User } from 'data/types';
+import { useAuth } from 'components/AuthProvider';
+
 import styles from './styles.module.css';
 
-export default function NavBar({ user }: { user?: User }) {
+export default function NavBar() {
+  const { authorized, user, logout } = useAuth();
+  console.log({ authorized, user });
   // const { isAuthenticated, loginWithPopup, logout, user } = useAuth0();
   // const { locale, setLocale, locales } = useIntl();
+  const router = useRouter();
+  const handleSelect = (eventKey: string | null) => {
+    switch (eventKey) {
+      case 'login':
+        router.push('/login?return=/');
+        break;
+      case 'logout':
+        logout();
+        break;
+    }
+  };
+
   return (
     <div>
       <Navbar expand="md" bg="light" className={styles.navbar}>
@@ -36,7 +54,7 @@ export default function NavBar({ user }: { user?: User }) {
           </Link>
           <Navbar.Toggle />
           <Navbar.Collapse>
-            <Nav className="ml-auto" navbar>
+            <Nav className="me-auto" navbar>
               <Nav.Item>
                 <Link href="/users" passHref>
                   <Nav.Link>Usuarios</Nav.Link>
@@ -103,16 +121,16 @@ export default function NavBar({ user }: { user?: User }) {
               )}
             </UncontrolledDropdown> */}
             </Nav>
-            <Nav className="justify-content-end">
-              <Nav.Item>
-                {user?.id ? (
-                  user.nombre
-                ) : (
-                  <Link href="/login?return=/" passHref>
-                    <Nav.Link>Login</Nav.Link>
-                  </Link>
-                )}
-              </Nav.Item>
+            <Nav onSelect={handleSelect}>
+              {user?.id ? (
+                <NavDropdown title={user.nombre}>
+                  <NavDropdown.Item eventKey="logout">Logout</NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <NavDropdown title="invitado">
+                  <NavDropdown.Item eventKey="login">Login</NavDropdown.Item>
+                </NavDropdown>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
