@@ -8,6 +8,6 @@ export default withIronSessionApiRoute(function logoutRoute(
   res: NextApiResponse<undefined>
 ) {
   req.session.destroy();
-  res.end();
+  res.end('logged off');
 },
 sessionOptions);

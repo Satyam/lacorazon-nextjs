@@ -19,7 +19,7 @@ export default withIronSessionApiRoute(
       await req.session.save();
       res.json(user);
     } else {
-      res.status(401).end();
+      res.status(401).end('unauthorized');
     }
   },
   sessionOptions

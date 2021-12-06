@@ -16,6 +16,6 @@ async function userRoute(
     // to get more information on the user if needed
     res.json(req.session.user);
   } else {
-    res.status(401).end();
+    res.status(401).end('unauthorized');
   }
 }
