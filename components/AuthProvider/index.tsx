@@ -4,6 +4,7 @@ import React, {
   createContext,
   useCallback,
   useMemo,
+  useEffect,
 } from 'react';
 
 import type { User } from 'data/types';
@@ -36,6 +37,13 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
   const [authorized, setAuthorised] = useState(false);
   const [user, setUser] = useState<User | undefined>();
 
+  useEffect(() => {
+    localFetch<User>(`${API_AUTH}/user`).then(({ data, error }) => {
+      setUser(data);
+      setAuthorised(!error);
+    });
+  }, []);
+
   const login = useCallback(
     (values: LoginFormInfo) =>
       localFetch<User>(`${API_AUTH}/login`, {
@@ -52,7 +60,8 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
   const logout = useCallback(
     () =>
       localFetch(`${API_AUTH}/logout`).then(() => {
-        setAuthorised(false), setUser(undefined);
+        setAuthorised(false);
+        setUser(undefined);
       }),
     [setAuthorised]
   );
