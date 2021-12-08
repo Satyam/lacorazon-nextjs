@@ -1,20 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import Image from 'next/image';
-import classNames from 'classnames';
-import {
-  Navbar,
-  Nav,
-  Container,
-  NavDropdown,
-  // UncontrolledDropdown,
-  // DropdownToggle,
-  // DropdownMenu,
-  // DropdownItem,
-} from 'react-bootstrap';
+
+import { Navbar, Nav, Container, NavDropdown } from 'react-bootstrap';
+
 import { FaUser } from 'react-icons/fa';
-import type { User } from 'data/types';
 import { useAuth } from 'components/AuthProvider';
 
 import styles from './styles.module.css';
@@ -22,8 +13,6 @@ import styles from './styles.module.css';
 export default function NavBar() {
   const { authorized, user, logout } = useAuth();
   console.log({ authorized, user });
-  // const { isAuthenticated, loginWithPopup, logout, user } = useAuth0();
-  // const { locale, setLocale, locales } = useIntl();
   const router = useRouter();
   const handleSelect = (eventKey: string | null) => {
     switch (eventKey) {
@@ -32,6 +21,9 @@ export default function NavBar() {
         break;
       case 'logout':
         logout();
+        break;
+      case 'profile':
+        router.push('/profile');
         break;
     }
   };
@@ -55,11 +47,13 @@ export default function NavBar() {
           <Navbar.Toggle />
           <Navbar.Collapse>
             <Nav className="me-auto" navbar>
-              <Nav.Item>
-                <Link href="/users" passHref>
-                  <Nav.Link>Usuarios</Nav.Link>
-                </Link>
-              </Nav.Item>
+              {authorized && (
+                <Nav.Item>
+                  <Link href="/users" passHref>
+                    <Nav.Link>Usuarios</Nav.Link>
+                  </Link>
+                </Nav.Item>
+              )}
               <Nav.Item>
                 <Link href="/vendedores" passHref>
                   <Nav.Link>Vendedores</Nav.Link>
@@ -75,59 +69,23 @@ export default function NavBar() {
                   <Nav.Link>Ventas</Nav.Link>
                 </Link>
               </Nav.Item>
-              {/* <UncontrolledDropdown nav inNavbar>
-              <DropdownToggle nav caret>
-                {locale}
-              </DropdownToggle>
-              <DropdownMenu right>
-                {locales.map(l => (
-                  <DropdownItem
-                    key={l}
-                    active={l === locale}
-                    onClick={() => setLocale(l)}
-                  >
-                    {l}
-                  </DropdownItem>
-                ))}
-              </DropdownMenu>
-            </UncontrolledDropdown>
-            <UncontrolledDropdown nav inNavbar>
-              {isAuthenticated && user ? (
-                <>
-                  <DropdownToggle nav caret className={styles.user}>
-                    <img src={user.picture} alt="User" />
-                    {user.name}
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem onClick={() => logout()}>Logout</DropdownItem>
-                    <DropdownItem divider />
-                    <DropdownItem tag={Link} to="/profile">
-                      Profile
-                    </DropdownItem>
-                  </DropdownMenu>
-                </>
-              ) : (
-                <>
-                  <DropdownToggle nav caret className={styles.user}>
-                    <FaUser />
-                    guest
-                  </DropdownToggle>
-                  <DropdownMenu right>
-                    <DropdownItem onClick={() => loginWithPopup()}>
-                      Login
-                    </DropdownItem>
-                  </DropdownMenu>
-                </>
-              )}
-            </UncontrolledDropdown> */}
             </Nav>
             <Nav onSelect={handleSelect}>
               {user?.id ? (
                 <NavDropdown title={user.nombre}>
                   <NavDropdown.Item eventKey="logout">Logout</NavDropdown.Item>
+                  <NavDropdown.Item eventKey="profile">
+                    Profile
+                  </NavDropdown.Item>
                 </NavDropdown>
               ) : (
-                <NavDropdown title="invitado">
+                <NavDropdown
+                  title={
+                    <>
+                      <FaUser /> invitado
+                    </>
+                  }
+                >
                   <NavDropdown.Item eventKey="login">Login</NavDropdown.Item>
                 </NavDropdown>
               )}
@@ -138,5 +96,3 @@ export default function NavBar() {
     </div>
   );
 }
-
-// Navigation.whyDidYouRender = true;
