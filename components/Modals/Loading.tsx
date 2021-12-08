@@ -10,8 +10,8 @@ const Loading: React.FC<{
   isOpen?: boolean;
 }> = ({
   title = 'Cargando ....',
-  children,
-  noIcon,
+  children = 'Cargando ...',
+  noIcon = false,
   isOpen = true,
   ...props
 }) => (
