@@ -1,4 +1,3 @@
-import type { GetStaticProps } from 'next';
 import useSWR from 'swr';
 
 import { localFetch } from 'lib/fetch';
@@ -24,14 +23,3 @@ export const upsertVendedor = (vendedor: Partial<Vendedor>) =>
     method: 'PUT',
     body: JSON.stringify(vendedor),
   });
-
-// This is so NextJS fails on trying to render this page
-export const getStaticProps: GetStaticProps = async () => {
-  if (process.env.NODE_ENV === 'production') {
-    return { notFound: true };
-  }
-  return { props: {} };
-};
-
-const NoRender = () => 'Not a real page';
-export default NoRender;
