@@ -62,9 +62,7 @@ const ListVendedoress = () => {
         <td>{vendedor.email}</td>
         <td align="center">
           <ButtonGroup size="sm">
-            <Link href={`/vendedores/edit/${id}`} passHref>
-              <ButtonIconEdit outline />
-            </Link>
+            <ButtonIconEdit outline link={`/vendedores/edit/${id}`} />
             {/* {can('vendedor:delete') && ( */}
             <ButtonIconDelete
               outline
@@ -84,9 +82,9 @@ const ListVendedoress = () => {
       title="Vendedores"
       heading="Vendedores"
       action={
-        <Link href="/vendedores/edit/new" passHref>
-          <ButtonIconAdd outline>Agregar</ButtonIconAdd>
-        </Link>
+        <ButtonIconAdd outline link="/vendedores/edit/new">
+          Agregar
+        </ButtonIconAdd>
       }
     >
       <Table striped hover size="sm" responsive bordered>

@@ -26,7 +26,7 @@ const ShowVendedores = () => {
       </Alert>
     );
   }
-  if (!id || !vendedor) return <Loading>Cargando usuario</Loading>;
+  if (!id || !vendedor) return <Loading>Cargando vendedor</Loading>;
 
   return (
     <Layout

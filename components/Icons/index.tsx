@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { Button, ButtonProps } from 'react-bootstrap';
 import classNames from 'classnames/bind';
 import {
@@ -16,14 +17,25 @@ import {
 import styles from './styles.module.css';
 import { IconType } from 'react-icons';
 
+/**
+ * The `link` property is like an `href` but it will enclose the button in a NextJS `Link`.
+ * For external links, keep using `href`.
+ */
 export type MyButtonProps = {
   color?: BootstrapColor;
   outline?: boolean;
+
+  link?: string;
 } & Omit<ButtonProps, 'variant'>;
 
-const MyButton: React.FC<MyButtonProps> = ({ color, outline, ...rest }) => (
-  <Button variant={`${outline ? 'outline-' : ''}${color}`} {...rest} />
-);
+const MyButton: React.FC<MyButtonProps> = ({ color, outline, link, ...rest }) =>
+  link ? (
+    <Link href={link} passHref>
+      <Button variant={`${outline ? 'outline-' : ''}${color}`} {...rest} />
+    </Link>
+  ) : (
+    <Button variant={`${outline ? 'outline-' : ''}${color}`} {...rest} />
+  );
 
 const cx = classNames.bind(styles);
 

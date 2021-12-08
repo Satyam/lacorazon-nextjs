@@ -62,9 +62,7 @@ const ListUsers = () => {
         <td>{user.email}</td>
         <td align="center">
           <ButtonGroup size="sm">
-            <Link href={`/users/edit/${id}`} passHref>
-              <ButtonIconEdit outline />
-            </Link>
+            <ButtonIconEdit outline link={`/users/edit/${id}`} />
             {/* {can('user:delete') && ( */}
             <ButtonIconDelete
               outline
@@ -84,9 +82,9 @@ const ListUsers = () => {
       title="Usuarios"
       heading="Usuarios"
       action={
-        <Link href="/users/edit/new" passHref>
-          <ButtonIconAdd outline>Agregar</ButtonIconAdd>
-        </Link>
+        <ButtonIconAdd outline link="/users/edit/new">
+          Agregar
+        </ButtonIconAdd>
       }
     >
       <Table striped hover size="sm" responsive bordered>
