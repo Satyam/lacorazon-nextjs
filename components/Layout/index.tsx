@@ -36,7 +36,7 @@ export default function Layout({
           <Col sm="12" md={{ span: wide ? 12 : 8, offset: wide ? 0 : 2 }}>
             <div className={styles.spacing}>
               <h1 className={styles.heading}>{heading}</h1>
-              <div className={styles.action}>{action}</div>
+              {action && <div className={styles.action}>{action}</div>}
             </div>
             <main className={styles.clear}>{children}</main>
           </Col>
