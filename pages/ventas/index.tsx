@@ -17,7 +17,7 @@ import { Loading } from 'components/Modals';
 import Layout from 'components/Layout';
 import { useModals, Alert } from 'components/Modals';
 
-import { useListVentas, deleteVenta, VentaVendedor } from './utils';
+import { useListVentas, deleteVenta, VentaVendedor } from 'lib/ventas';
 
 export const TablaVentas: React.FC<{
   idVendedor?: ID;
@@ -74,9 +74,7 @@ export const TablaVentas: React.FC<{
         </td>
         <td align="center">
           <ButtonGroup size="sm">
-            <Link href={`/ventas/edit/${id}`} passHref>
-              <ButtonIconEdit outline />
-            </Link>
+            <ButtonIconEdit outline link={`/ventas/edit/${id}`} />
             <ButtonIconDelete
               outline
               onClick={onDelete}
@@ -119,9 +117,9 @@ const ListVentas: React.FC<{
       heading={nombreVendedor ? `Ventas de ${nombreVendedor}` : 'Ventas'}
       wide={wide}
       action={
-        <Link href="/ventas/edit/new" passHref>
-          <ButtonIconAdd outline>Agregar</ButtonIconAdd>
-        </Link>
+        <ButtonIconAdd outline link="/ventas/edit/new">
+          Agregar
+        </ButtonIconAdd>
       }
     >
       <TablaVentas idVendedor={idVendedor} />
