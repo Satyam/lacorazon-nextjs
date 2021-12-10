@@ -2,6 +2,7 @@ import React from 'react';
 import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useListUsers, deleteUser } from 'lib/users';
 import {
   ButtonIconAdd,
@@ -10,13 +11,27 @@ import {
 } from 'components/Icons';
 import Layout from 'components/Layout';
 import type { User } from 'data/types';
+import { list as listUser } from 'data/user';
 
 import { Loading, useModals, Alert } from 'components/Modals';
 // import { useAuth0 } from 'Providers/Auth';
 
-const ListUsers = () => {
+export const getStaticProps: GetStaticProps<{ staticData: User[] }> =
+  async () => {
+    const staticData = await listUser();
+    return {
+      props: {
+        staticData,
+      },
+      revalidate: false,
+    };
+  };
+
+const ListUsers = ({
+  staticData,
+}: InferGetStaticPropsType<typeof getStaticProps>) => {
   const router = useRouter();
-  const { data: users, error, mutate } = useListUsers();
+  const { data, error, mutate } = useListUsers();
   const { confirmDelete, alert } = useModals();
 
   if (error)
@@ -25,6 +40,9 @@ const ListUsers = () => {
         {error.message}
       </Alert>
     );
+
+  console.log({ data, staticData });
+  const users = data || staticData;
   if (!users) return <Loading>Cargando usuarios</Loading>;
 
   // const { can } = useAuth0();

@@ -12,7 +12,7 @@ const TABLE = 'Users';
 
 const safeFields: Array<Partial<keyof User>> = ['id', 'nombre', 'email'];
 
-export async function list() {
+export async function list(): Promise<User[]> {
   const db = await getDb();
   return db.all(`select ${safeFields.join(',')} from ${TABLE}`);
 }
