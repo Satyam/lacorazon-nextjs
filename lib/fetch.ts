@@ -77,8 +77,8 @@ export const apiService = async <
 >(
   url: string,
   req: API_REQ<REQ_TYPE>,
-  pre?: (d: AnyRecordOrArray) => AnyRecordOrArray,
-  post?: (r: AnyRecordOrArray) => RES_TYPE
+  pre?: (d: AnyRecord) => AnyRecord,
+  post?: (r: AnyRecord) => AnyRecord
 ): Promise<API_REPLY<RES_TYPE>> => {
   return fetch(`${window.origin}/api/${url}`, {
     method: 'POST',
@@ -129,7 +129,7 @@ export const useApiService = <
 >(
   url: string,
   req: API_REQ,
-  post?: (r: AnyRecordOrArray) => RES_TYPE
+  post?: (r: AnyRecord) => AnyRecord
 ) => {
   const { data, error, mutate } = useSWR<API_REPLY<RES_TYPE>, Error>(
     req.id === null ? null : [`/api/${url}`, req],
