@@ -5,7 +5,8 @@ import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
 import { TablaVentas } from 'pages/ventas/index';
-import { useGetVendedor, FetchError } from 'lib/vendedores';
+import { useGetVendedor } from 'lib/vendedores';
+import { ERR_CODE } from 'lib/fetch';
 
 const ShowVendedores = () => {
   const router = useRouter();
@@ -13,7 +14,7 @@ const ShowVendedores = () => {
   const { data: vendedor, error } = useGetVendedor(id as ID);
 
   if (error) {
-    if (error instanceof FetchError && error.status === 404) {
+    if (error === ERR_CODE.NOT_FOUND) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El vendedor pedido no existe o ha sido borrado
@@ -22,7 +23,7 @@ const ShowVendedores = () => {
     }
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        {error.message}
+        Error inesperado: {error}
       </Alert>
     );
   }

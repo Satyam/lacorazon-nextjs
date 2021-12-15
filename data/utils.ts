@@ -16,10 +16,9 @@ export async function getDb() {
   return _db;
 }
 
-export async function getById<R extends RecordWithId>(
+export async function getById<R extends AnyRecord = AnyRecord>(
   nombreTabla: string,
   id: ID,
-
   camposSalida?: Array<keyof R>
 ): Promise<R | undefined> {
   const f = camposSalida ? camposSalida.join(',') : '*';
@@ -60,7 +59,7 @@ export async function createWithCuid<R extends RecordWithoutId>(
   const values = Object.values(rest);
   const db = await getDb();
 
-  await db.run(
+  const { lastID, changes } = await db.run(
     `insert into ${nombreTabla} (id, ${fields.join(',')}) values (${Array(
       fields.length + 1
     )
@@ -68,34 +67,32 @@ export async function createWithCuid<R extends RecordWithoutId>(
       .join(',')})`,
     [id, ...values]
   );
+  console.log('createWithCuid', { nombreTabla, fila, id, lastID, changes });
+  if (changes !== 1) return;
   return getById<R & { id: ID }>(nombreTabla, id, camposSalida);
 }
 
-export async function updateById<R extends RecordWithId>(
+export async function updateById<R extends AnyRecord = AnyRecord>(
   nombreTabla: string,
+  id: ID,
   fila: PartialExcept<R, 'id'>,
 
   camposSalida?: Array<keyof R>
 ): Promise<R | undefined> {
-  if ('id' in fila) {
-    const { id, ...rest } = fila;
-    const fields = Object.keys(rest);
-    const values = Object.values(rest);
-    const db = await getDb();
-    const result = await db.run(
-      `update ${nombreTabla}  set (${fields.join(',')}) = (${Array(
-        fields.length
-      )
-        .fill('?')
-        .join(',')})  where id = ?`,
-      [...values, id]
-    );
-    if (result.changes !== 1) return;
-    return getById(nombreTabla, id, camposSalida);
-  }
+  const fields = Object.keys(fila);
+  const values = Object.values(fila);
+  const db = await getDb();
+  const result = await db.run(
+    `update ${nombreTabla}  set (${fields.join(',')}) = (${Array(fields.length)
+      .fill('?')
+      .join(',')})  where id = ?`,
+    [...values, id]
+  );
+  if (result.changes !== 1) return;
+  return getById(nombreTabla, id, camposSalida);
 }
 
-export async function deleteById<R extends RecordWithId>(
+export async function deleteById<R extends AnyRecord = AnyRecord>(
   nombreTabla: string,
   id: ID,
 

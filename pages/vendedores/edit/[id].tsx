@@ -13,10 +13,11 @@ import { ButtonIconAdd, ButtonIconDelete, ButtonSet } from 'components/Icons';
 import { Loading, useModals, Alert } from 'components/Modals';
 import {
   useGetVendedor,
-  FetchError,
-  upsertVendedor,
+  createVendedor,
+  updateVendedor,
   deleteVendedor,
 } from 'lib/vendedores';
+import { ERR_CODE } from 'lib/fetch';
 import type { Vendedor } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
@@ -31,15 +32,15 @@ const vendedorSchema = yup.object().shape({
 export default function EditVendedor() {
   const router = useRouter();
   const idVendedor = router.query.id as ID;
-  const id: ID | undefined = idVendedor === 'new' ? undefined : idVendedor;
+  const id: ID | null = idVendedor === 'new' ? null : idVendedor;
 
   const { data: vendedor, error } = useGetVendedor(id as ID);
 
   const { openLoading, closeLoading, confirmDelete } = useModals();
   // const { can } = useAuth0();
 
-  const handleGetError = (error: Error) => {
-    if (error instanceof FetchError && error.status === 404) {
+  const handleGetError = (error: ERR_CODE | Error) => {
+    if (error === ERR_CODE.NOT_FOUND) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El vendedor pedido no existe o ha sido borrado
@@ -48,7 +49,7 @@ export default function EditVendedor() {
     }
     return (
       <Alert warning heading="Error Desconocido" onClose={() => router.back()}>
-        {error.message}
+        Error inesperado: {error}
       </Alert>
     );
   };
@@ -71,44 +72,47 @@ export default function EditVendedor() {
     values,
     formReturn
   ) => {
-    const handleUpsertError = (error: Error) => {
-      if (error instanceof FetchError) {
-        switch (error.status) {
-          case 404:
-            return (
-              <Alert heading="No existe" warning onClose={() => router.back()}>
-                El vendedor ya había sido borrado
-              </Alert>
-            );
-          case 409:
-            formReturn.setError('nombre', {
-              type: 'duplicado',
-              message: 'Ese nombre ya existe',
-            });
-            return (
-              <Alert heading="Duplicado" warning onClose={() => undefined}>
-                Ya existe un vendedor con ese mismo nombre
-              </Alert>
-            );
-        }
+    const handleUpsertError = (error: ERR_CODE | Error) => {
+      switch (error) {
+        case ERR_CODE.NOT_FOUND:
+          return (
+            <Alert heading="No existe" warning onClose={() => router.back()}>
+              El vendedor ya había sido borrado
+            </Alert>
+          );
+        case ERR_CODE.DUPLICATE:
+          formReturn.setError('nombre', {
+            type: 'duplicado',
+            message: 'Ese nombre ya existe',
+          });
+          return (
+            <Alert heading="Duplicado" warning onClose={() => undefined}>
+              Ya existe un vendedor con ese mismo nombre
+            </Alert>
+          );
+        default:
+          return (
+            <Alert
+              warning
+              heading="Error Desconocido"
+              onClose={() => undefined}
+            >
+              Error inesperado: {error}
+            </Alert>
+          );
       }
-      return (
-        <Alert warning heading="Error Desconocido" onClose={() => undefined}>
-          {error.message}
-        </Alert>
-      );
     };
 
     if (id) {
       openLoading('Actualizando vendedor');
-      await upsertVendedor({ id, ...values })
+      await updateVendedor(id, values)
         .then(({ error }) => {
           if (error) return handleUpsertError(error);
         })
         .finally(closeLoading);
     } else {
       openLoading('Creando vendedor');
-      await upsertVendedor(values)
+      await createVendedor(values)
         .then(({ data, error }) => {
           if (error) return handleUpsertError(error);
           router.replace(`/vendedores/edit/${data?.id}`);

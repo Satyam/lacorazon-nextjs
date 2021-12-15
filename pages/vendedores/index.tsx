@@ -3,6 +3,7 @@ import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useListVendedores, deleteVendedor } from 'lib/vendedores';
+import { ERR_CODE } from 'lib/fetch';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -22,7 +23,7 @@ const ListVendedoress = () => {
   if (error)
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        {error.message}
+        Error: {error} ???
       </Alert>
     );
   if (!vendedores) return <Loading>Cargando vendedores</Loading>;
@@ -32,22 +33,21 @@ const ListVendedoress = () => {
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
-    confirmDelete(`al vendedor ${nombre}`, () =>
-      deleteVendedor(id as string).then((res) => {
-        if (res.error) {
-          if (res.error.status === 404) {
-            alert(
-              'No existe',
-              `El vendedor "${nombre}" no existe o ha sido borrado`,
-              true,
-              () => {}
-            );
-          } else throw res.error;
-        } else {
-          mutate();
-        }
-      })
-    );
+    confirmDelete(`al vendedor ${nombre}`, async () => {
+      const { error, data } = await deleteVendedor(id as string);
+      if (error) {
+        if (error === ERR_CODE.NOT_FOUND) {
+          alert(
+            'No existe',
+            `El vendedor "${nombre}" no existe o ha sido borrado`,
+            true,
+            () => {}
+          );
+        } else throw new Error(`Error inesperado: ${error}`);
+      } else {
+        mutate();
+      }
+    });
   };
 
   const rowVendedores = (vendedor: Vendedor) => {
@@ -76,7 +76,7 @@ const ListVendedoress = () => {
       </tr>
     );
   };
-
+  console.log('LIST vendedores', { error, vendedores });
   return (
     <Layout
       title="Vendedores"

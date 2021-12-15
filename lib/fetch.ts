@@ -1,6 +1,8 @@
 import useSWR, { Middleware } from 'swr';
 
+// These are HTTP status codes
 export enum ERR_CODE {
+  BAD_REQUEST = 400,
   NOT_FOUND = 404,
   DUPLICATE = 409,
   UNAUTHORIZED = 401,
@@ -34,19 +36,16 @@ export type FetchOpReply<T> = {
   error?: FetchError;
 };
 
-type AnyRecord = Record<string, any>;
-type AnyRecordOrArray = AnyRecord | AnyRecord[];
-
 export type API_REQ<T extends AnyRecordOrArray = AnyRecord> = {
   op: OP;
-  id?: ID;
+  id?: ID | null;
   data?: T;
   options?: AnyRecord;
 };
 
 export type API_REPLY<T extends AnyRecordOrArray = AnyRecord> = {
   data?: T;
-  error?: ERR_CODE;
+  error?: ERR_CODE | Error;
 };
 
 function prePostProcess<OUT extends AnyRecord = AnyRecord>(
@@ -96,30 +95,13 @@ export const apiService = async <
           error,
           data: prePostProcess<RES_TYPE>(data, post),
         };
-      } catch (_) {
-        return {};
+      } catch (error) {
+        return { error } as { error: Error };
       }
     } else {
       throw new FetchError(res);
     }
   });
-};
-
-const transformMiddleware: Middleware = (useSWRNext) => {
-  return (key, fetcher, config) => {
-    const swr = useSWRNext(key, fetcher, config);
-
-    if (swr.error || !swr.data) return swr;
-
-    // @ts-ignore
-    const ventas = swr.data.map<VentaVendedor>((venta) => ({
-      ...venta,
-      fecha: new Date(venta.fecha),
-    }));
-
-    // After hook runs...
-    return { ...swr, data: ventas };
-  };
 };
 
 export const apiFetcher = (url: string, req: API_REQ) => {
@@ -149,13 +131,14 @@ export const useApiService = <
   req: API_REQ,
   post?: (r: AnyRecordOrArray) => RES_TYPE
 ) => {
-  const { data, error } = useSWR<API_REPLY<RES_TYPE>, ERR_CODE>(
-    [`/api/${url}`, req],
+  const { data, error, mutate } = useSWR<API_REPLY<RES_TYPE>, Error>(
+    req.id === null ? null : [`/api/${url}`, req],
     apiFetcher
   );
   return {
-    error,
-    data: prePostProcess<RES_TYPE>(data, post),
+    error: data?.error || error,
+    data: prePostProcess<RES_TYPE>(data?.data, post),
+    mutate,
   };
 };
 

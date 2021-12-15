@@ -1,25 +1,40 @@
-import useSWR from 'swr';
+import { apiService, useApiService, OP } from 'lib/fetch';
 
-import { localFetch } from 'lib/fetch';
-
-export { FetchError } from 'lib/fetch';
 import type { Vendedor } from 'data/types';
-const API_VENDEDORES = '/api/vendedores';
+const API_VENDEDORES = 'vendedores';
 
 export const useListVendedores = () =>
-  useSWR<Vendedor[], Error>(API_VENDEDORES);
-
-export const deleteVendedor = (id: ID) =>
-  localFetch<Vendedor>(`${API_VENDEDORES}/${id}`, { method: 'DELETE' });
+  useApiService<Vendedor[]>(API_VENDEDORES, {
+    op: OP.LIST,
+  });
 
 export const getVendedor = (id: ID) =>
-  localFetch<Vendedor>(`${API_VENDEDORES}/${id}`);
+  apiService<Vendedor>(API_VENDEDORES, {
+    op: OP.GET,
+    id,
+  });
 
-export const useGetVendedor = (id: ID) =>
-  useSWR<Vendedor, Error>(id ? `${API_VENDEDORES}/${id}` : null);
+export const useGetVendedor = (id: ID | null) =>
+  useApiService<Vendedor>(API_VENDEDORES, {
+    op: OP.GET,
+    id,
+  });
 
-export const upsertVendedor = (vendedor: Partial<Vendedor>) =>
-  localFetch<Vendedor>(`${API_VENDEDORES}/${vendedor.id || 0}`, {
-    method: 'PUT',
-    body: JSON.stringify(vendedor),
+export const updateVendedor = (id: ID, vendedor: Partial<Vendedor>) =>
+  apiService<Partial<Vendedor>>(API_VENDEDORES, {
+    op: OP.UPDATE,
+    id,
+    data: vendedor,
+  });
+
+export const createVendedor = (vendedor: Partial<Vendedor>) =>
+  apiService<Partial<Vendedor>>(API_VENDEDORES, {
+    op: OP.CREATE,
+    data: vendedor,
+  });
+
+export const deleteVendedor = (id: ID) =>
+  apiService<Vendedor>(API_VENDEDORES, {
+    op: OP.DELETE,
+    id,
   });
