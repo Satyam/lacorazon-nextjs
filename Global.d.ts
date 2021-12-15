@@ -22,3 +22,6 @@ type PartialExcept<T, K extends keyof T> = Partial<T> & Pick<T, K>;
 type RecordWithId = { id: ID; [key: string]: unknown };
 
 type RecordWithoutId = { [key: string]: unknown };
+
+type AnyRecord = Record<string, any>;
+type AnyRecordOrArray = AnyRecord | AnyRecord[];
