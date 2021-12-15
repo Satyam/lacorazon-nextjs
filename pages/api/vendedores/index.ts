@@ -57,5 +57,7 @@ export default async function handler(
       }
       return res.json({ error: ERR_CODE.BAD_REQUEST });
     }
+    default:
+      return res.json({ error: ERR_CODE.BAD_REQUEST });
   }
 }
