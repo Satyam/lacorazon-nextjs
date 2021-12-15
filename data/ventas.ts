@@ -34,10 +34,10 @@ export function get(id: ID) {
   return getById<Venta>(TABLE, id);
 }
 
-export function create(user: Venta) {
-  return createWithCuid<Venta>(TABLE, user);
+export function create(user: Partial<Venta>) {
+  return createWithCuid<Partial<Venta>>(TABLE, user);
 }
 
-export function update(user: Venta) {
-  return updateById<Venta>(TABLE, user);
+export function update(id: ID, user: Partial<Venta>) {
+  return updateById<Partial<Venta>>(TABLE, id, user);
 }
