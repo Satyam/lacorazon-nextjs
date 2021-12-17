@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useListUsers, deleteUser } from 'lib/users';
+import { ERR_CODE } from 'lib/fetch';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -37,11 +38,10 @@ const ListUsers = ({
   if (error)
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        {error.message}
+        Error inesperado: {error}
       </Alert>
     );
 
-  console.log({ data, staticData });
   const users = data || staticData;
   if (!users) return <Loading>Cargando usuarios</Loading>;
 
@@ -50,22 +50,21 @@ const ListUsers = ({
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
-    confirmDelete(`al usuario ${nombre}`, () =>
-      deleteUser(id as string).then((res) => {
-        if (res.error) {
-          if (res.error.status === 404) {
-            alert(
-              'No existe',
-              `El usuario "${nombre}" no existe o ha sido borrado`,
-              true,
-              () => {}
-            );
-          } else throw res.error;
-        } else {
-          mutate();
-        }
-      })
-    );
+    confirmDelete(`al usuario ${nombre}`, async () => {
+      const { error } = await deleteUser(id as string);
+      if (error) {
+        if (error === ERR_CODE.NOT_FOUND) {
+          alert(
+            'No existe',
+            `El usuario "${nombre}" no existe o ha sido borrado`,
+            true,
+            () => {}
+          );
+        } else throw new Error(`Error inesperado: ${error}`);
+      } else {
+        mutate();
+      }
+    });
   };
 
   const rowUser = (user: User) => {
@@ -120,5 +119,3 @@ const ListUsers = ({
 };
 
 export default ListUsers;
-
-ListUsers.whyDidYouRender = false;

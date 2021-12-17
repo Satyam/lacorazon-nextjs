@@ -3,7 +3,8 @@ import { useRouter } from 'next/router';
 import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
-import { useGetUser, FetchError } from 'lib/users';
+import { useGetUser } from 'lib/users';
+import { ERR_CODE } from 'lib/fetch';
 
 const ShowUser = () => {
   const router = useRouter();
@@ -11,7 +12,7 @@ const ShowUser = () => {
   const { data: user, error } = useGetUser(id as ID);
 
   if (error) {
-    if (error instanceof FetchError && error.status === 404) {
+    if (error === ERR_CODE.NOT_FOUND) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El usuario pedido no existe o ha sido borrado
@@ -20,7 +21,7 @@ const ShowUser = () => {
     }
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        {error.message}
+        Error inesperado: {error}
       </Alert>
     );
   }

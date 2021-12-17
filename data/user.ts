@@ -12,9 +12,9 @@ const TABLE = 'Users';
 
 const safeFields: Array<Partial<keyof User>> = ['id', 'nombre', 'email'];
 
-export async function list(): Promise<User[]> {
+export async function list() {
   const db = await getDb();
-  return db.all(`select ${safeFields.join(',')} from ${TABLE}`);
+  return db.all<User[]>(`select ${safeFields.join(',')} from ${TABLE}`);
 }
 
 export function del(id: ID) {
@@ -37,14 +37,16 @@ export async function checkValidUser(
   );
 }
 
-function hashPassword(user: User) {
-  return user.password ? { ...user, password: hash(user.password) } : user;
+function hashPassword(user: Partial<User>) {
+  return user.password
+    ? { ...user, password: hash(user.password.toLowerCase()) }
+    : user;
 }
 
-export function create(user: User) {
-  return createWithCuid<User>(TABLE, hashPassword(user), safeFields);
+export function create(user: Partial<User>) {
+  return createWithCuid<Partial<User>>(TABLE, hashPassword(user), safeFields);
 }
 
-export function update(user: User) {
-  return updateById<User>(TABLE, hashPassword(user), safeFields);
+export function update(id: ID, user: Partial<User>) {
+  return updateById<Partial<User>>(TABLE, id, hashPassword(user), safeFields);
 }
