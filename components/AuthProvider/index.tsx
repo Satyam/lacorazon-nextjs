@@ -8,16 +8,18 @@ import React, {
 } from 'react';
 
 import type { User } from 'data/types';
-import { localFetch } from 'lib/fetch';
+import { apiService, ERR_CODE, OP } from 'lib/fetch';
 import type { LoginFormInfo } from 'pages/api/auth/login';
 export type { LoginFormInfo } from 'pages/api/auth/login';
 
-const API_AUTH = '/api/auth';
+const API_AUTH = 'auth';
 
 type AuthType = {
   authorized: boolean;
   user?: User;
-  login: (values: LoginFormInfo) => Promise<{ user?: User; error?: Error }>;
+  login: (
+    values: LoginFormInfo
+  ) => Promise<{ user?: User; error?: Error | ERR_CODE }>;
   logout: () => Promise<void>;
 };
 
@@ -38,17 +40,19 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
   const [user, setUser] = useState<User | undefined>();
 
   useEffect(() => {
-    localFetch<User>(`${API_AUTH}/user`).then(({ data, error }) => {
-      setUser(data);
-      setAuthorised(!error);
+    apiService<User>(API_AUTH, {
+      op: OP.GET,
+    }).then(({ data, error }) => {
+      if (data?.id !== user?.id) setUser(data);
+      if (!error === authorized) setAuthorised(!error);
     });
-  }, []);
+  }, [user, authorized]);
 
   const login = useCallback(
     (values: LoginFormInfo) =>
-      localFetch<User>(`${API_AUTH}/login`, {
-        method: 'PUT',
-        body: JSON.stringify(values),
+      apiService<LoginFormInfo, User>(API_AUTH, {
+        op: OP.CREATE,
+        data: values,
       }).then(({ data, error }) => {
         setUser(data);
         setAuthorised(!error);
@@ -59,11 +63,11 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
 
   const logout = useCallback(
     () =>
-      localFetch(`${API_AUTH}/logout`).then(() => {
+      apiService(API_AUTH, { op: OP.DELETE, id: user?.id }).then(() => {
         setAuthorised(false);
         setUser(undefined);
       }),
-    [setAuthorised]
+    [user]
   );
 
   const ctx = useMemo(
