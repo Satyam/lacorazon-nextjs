@@ -1,4 +1,4 @@
-import useSWR, { Middleware } from 'swr';
+import useSWR from 'swr';
 
 // These are HTTP status codes
 export enum ERR_CODE {
@@ -30,11 +30,6 @@ export enum OP {
   UPDATE = 'update',
   DELETE = 'delete',
 }
-
-export type FetchOpReply<T> = {
-  data?: T;
-  error?: FetchError;
-};
 
 export type API_REQ<T extends AnyRecordOrArray = AnyRecord> = {
   op: OP;
@@ -132,45 +127,11 @@ export const useApiService = <
   post?: (r: AnyRecord) => AnyRecord
 ) => {
   const { data, error, mutate } = useSWR<API_REPLY<RES_TYPE>, Error>(
-    req.id === null ? null : [`/api/${url}`, req],
-    apiFetcher
+    req.id === null ? null : [`/api/${url}`, req]
   );
   return {
     error: data?.error || error,
     data: prePostProcess<RES_TYPE>(data?.data, post),
     mutate,
   };
-};
-
-export const swrFetcher = (url: string, config?: RequestInit) => {
-  return fetch(url, config).then((res) => {
-    if (res.ok) {
-      try {
-        return res.json();
-      } catch (_) {
-        return {};
-      }
-    } else {
-      throw new FetchError(res);
-    }
-  });
-};
-
-export const localFetch = async <T extends Record<string, any>>(
-  url: string,
-  config?: RequestInit
-): Promise<FetchOpReply<T>> => {
-  return fetch(`${window.origin}${url}`, config).then(
-    async (res): Promise<FetchOpReply<T>> => {
-      if (res.ok) {
-        try {
-          return { data: await res.json() };
-        } catch (_) {
-          return {};
-        }
-      } else {
-        return { error: new FetchError(res) };
-      }
-    }
-  );
 };

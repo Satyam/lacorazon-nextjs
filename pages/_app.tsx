@@ -4,7 +4,7 @@ import { SWRConfig } from 'swr';
 import type { AppProps } from 'next/app';
 import { ModalsProvider } from 'components/Modals/Provider';
 import { AuthProvider } from 'components/AuthProvider';
-import { swrFetcher } from 'lib/fetch';
+import { apiFetcher } from 'lib/fetch';
 import '../styles/globals.css';
 
 export default function MyApp({ Component, pageProps }: AppProps) {
@@ -12,7 +12,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
     <SWRConfig
       value={{
         refreshInterval: 30000,
-        fetcher: swrFetcher,
+        fetcher: apiFetcher,
       }}
     >
       <AuthProvider>
