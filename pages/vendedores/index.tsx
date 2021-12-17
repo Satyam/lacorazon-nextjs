@@ -102,5 +102,3 @@ const ListVendedoress = () => {
 };
 
 export default ListVendedoress;
-
-ListVendedoress.whyDidYouRender = false;
