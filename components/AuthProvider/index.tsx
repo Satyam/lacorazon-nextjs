@@ -9,8 +9,8 @@ import React, {
 
 import type { User } from 'data/types';
 import { apiService, ERR_CODE, OP } from 'lib/fetch';
-import type { LoginFormInfo } from 'pages/api/auth/login';
-export type { LoginFormInfo } from 'pages/api/auth/login';
+import type { LoginFormInfo } from 'pages/api/auth';
+export type { LoginFormInfo } from 'pages/api/auth';
 
 const API_AUTH = 'auth';
 

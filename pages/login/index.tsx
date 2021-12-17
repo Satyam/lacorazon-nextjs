@@ -12,14 +12,11 @@ import Layout from 'components/Layout';
 import { useModals, Alert } from 'components/Modals';
 import { LoginFormInfo, useAuth } from 'components/AuthProvider';
 
-import type { User } from 'data/types';
-
 const loginSchema = yup.object().shape({
   email: yup.string().trim().required().default(''),
   password: yup.string().trim().required().default(''),
 });
 
-const API_LOGIN = '/api/auth/login';
 /*
  Needs to redirect once logged in.
  Need to handle first time users with no password.
