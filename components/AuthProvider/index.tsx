@@ -43,10 +43,10 @@ export const AuthProvider: React.FC<{}> = ({ children }) => {
     apiService<User>(API_AUTH, {
       op: OP.GET,
     }).then(({ data, error }) => {
-      if (data?.id !== user?.id) setUser(data);
-      if (!error === authorized) setAuthorised(!error);
+      setUser(data);
+      setAuthorised(!error);
     });
-  }, [user, authorized]);
+  }, []);
 
   const login = useCallback(
     (values: LoginFormInfo) =>
