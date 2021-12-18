@@ -26,6 +26,7 @@ const TextField: React.FC<{
   counter = (counter + 1) % Number.MAX_SAFE_INTEGER;
   const {
     register,
+    clearErrors,
     formState: { errors },
   } = useFormContext();
 
@@ -47,7 +48,11 @@ const TextField: React.FC<{
           type={type}
           isInvalid={hasError}
           className={styles.formControl}
-          {...register(name)}
+          {...register(name, {
+            onChange: () => {
+              if (hasError) setTimeout(() => clearErrors(name), 1000);
+            },
+          })}
           {...rest}
         />
         {help && <Form.Text>{help}</Form.Text>}
