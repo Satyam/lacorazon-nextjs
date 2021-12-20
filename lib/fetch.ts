@@ -10,16 +10,20 @@ export enum ERR_CODE {
 }
 
 export class FetchError extends Error {
-  status: ERR_CODE | number;
+  code: ERR_CODE | number;
   url: string;
   constructor(res: Response) {
     super(res.statusText);
+    // Maintains proper stack trace for where our error was thrown (only available on V8)
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, FetchError);
+    }
     this.name = 'FetchError';
-    this.status = res.status;
+    this.code = res.status;
     this.url = res.url;
   }
   toString() {
-    return `FetchError: ${this.message} Status: ${this.status} on fetch from  ${this.url}`;
+    return `FetchError: ${this.message} Status: ${this.code} on fetch from  ${this.url}`;
   }
 }
 
