@@ -8,7 +8,7 @@ import React, {
 } from 'react';
 
 import type { User } from 'data/types';
-import { apiService, ERR_CODE, OP } from 'lib/fetch';
+import { apiService, OP } from 'lib/fetch';
 import type { LoginFormInfo } from 'pages/api/auth';
 export type { LoginFormInfo } from 'pages/api/auth';
 
@@ -17,9 +17,7 @@ const API_AUTH = 'auth';
 type AuthType = {
   authorized: boolean;
   user?: User;
-  login: (
-    values: LoginFormInfo
-  ) => Promise<{ user?: User; error?: Error | ERR_CODE }>;
+  login: (values: LoginFormInfo) => Promise<{ user?: User; error?: Error }>;
   logout: () => Promise<void>;
 };
 

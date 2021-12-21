@@ -12,7 +12,7 @@ import Layout from 'components/Layout';
 import { ButtonIconAdd, ButtonIconDelete, ButtonSet } from 'components/Icons';
 import { Loading, useModals, Alert } from 'components/Modals';
 import { useGetUser, createUser, updateUser, deleteUser } from 'lib/users';
-import { ERR_CODE } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/fetch';
 import type { User } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
@@ -34,8 +34,8 @@ export default function EditUser() {
   const { openLoading, closeLoading, confirmDelete } = useModals();
   // const { can } = useAuth0();
 
-  const handleGetError = (error: ERR_CODE | Error) => {
-    if (error === ERR_CODE.NOT_FOUND) {
+  const handleGetError = (error: Error) => {
+    if (error instanceof FetchError && error.code === ERR_CODE.NOT_FOUND) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El usuario pedido no existe o ha sido borrado
@@ -67,36 +67,34 @@ export default function EditUser() {
     values,
     formReturn
   ) => {
-    const handleUpsertError = (error: ERR_CODE | Error) => {
-      switch (error) {
-        case ERR_CODE.NOT_FOUND:
-          return (
-            <Alert heading="No existe" warning onClose={() => router.back()}>
-              El usuario ya había sido borrado
-            </Alert>
-          );
-        case ERR_CODE.DUPLICATE:
-          formReturn.setError('nombre', {
-            type: 'duplicado',
-            message: 'Ese nombre ya existe',
-          });
-          return (
-            <Alert heading="Duplicado" warning onClose={() => undefined}>
-              Ya existe un usuario con ese mismo nombre
-            </Alert>
-          );
+    const handleUpsertError = (error: Error) => {
+      if (error instanceof FetchError) {
+        switch (error.code) {
+          case ERR_CODE.NOT_FOUND:
+            return (
+              <Alert heading="No existe" warning onClose={() => router.back()}>
+                El usuario ya había sido borrado
+              </Alert>
+            );
+          case ERR_CODE.DUPLICATE:
+            formReturn.setError('nombre', {
+              type: 'duplicado',
+              message: 'Ese nombre ya existe',
+            });
+            return (
+              <Alert heading="Duplicado" warning onClose={() => undefined}>
+                Ya existe un usuario con ese mismo nombre
+              </Alert>
+            );
 
-        default:
-          return (
-            <Alert
-              warning
-              heading="Error Desconocido"
-              onClose={() => undefined}
-            >
-              Error inesperado: {error}
-            </Alert>
-          );
+          default:
+        }
       }
+      return (
+        <Alert warning heading="Error Desconocido" onClose={() => undefined}>
+          Error inesperado: {error}
+        </Alert>
+      );
     };
 
     if (id) {

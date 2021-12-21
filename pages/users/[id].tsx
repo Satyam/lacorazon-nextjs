@@ -4,15 +4,15 @@ import { ReadOnlyForm, LabeledText } from 'components/Form';
 import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
 import { useGetUser } from 'lib/users';
-import { ERR_CODE } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/fetch';
 
 const ShowUser = () => {
   const router = useRouter();
   const { id } = router.query as { id: ID };
   const { data: user, error } = useGetUser(id as ID);
 
-  if (error) {
-    if (error === ERR_CODE.NOT_FOUND) {
+  if (error instanceof FetchError) {
+    if (error.code === ERR_CODE.NOT_FOUND) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El usuario pedido no existe o ha sido borrado

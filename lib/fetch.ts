@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-
+import { SqlError } from 'data/utils';
 // These are HTTP status codes
 export enum ERR_CODE {
   BAD_REQUEST = 400,
@@ -49,7 +49,7 @@ export type API_REQ<T extends AnyRecordOrArray = AnyRecord> = {
 
 export type API_REPLY<T extends AnyRecordOrArray = AnyRecord> = {
   data?: T;
-  error?: ERR_CODE | Error;
+  error?: FetchError | SqlError | Error;
 };
 
 function prePostProcess<OUT extends AnyRecord = AnyRecord>(

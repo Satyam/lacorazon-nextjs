@@ -3,7 +3,7 @@ import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useListVendedores, deleteVendedor } from 'lib/vendedores';
-import { ERR_CODE } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/fetch';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -34,9 +34,9 @@ const ListVendedoress = () => {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al vendedor ${nombre}`, async () => {
-      const { error, data } = await deleteVendedor(id as string);
-      if (error) {
-        if (error === ERR_CODE.NOT_FOUND) {
+      const { error } = await deleteVendedor(id as string);
+      if (error instanceof FetchError) {
+        if (error.code === ERR_CODE.NOT_FOUND) {
           alert(
             'No existe',
             `El vendedor "${nombre}" no existe o ha sido borrado`,
@@ -76,7 +76,7 @@ const ListVendedoress = () => {
       </tr>
     );
   };
-  console.log('LIST vendedores', { error, vendedores });
+
   return (
     <Layout
       title="Vendedores"

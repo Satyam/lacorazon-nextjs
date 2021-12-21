@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useListUsers, deleteUser } from 'lib/users';
-import { ERR_CODE } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/fetch';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -52,8 +52,8 @@ const ListUsers = ({
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, async () => {
       const { error } = await deleteUser(id as string);
-      if (error) {
-        if (error === ERR_CODE.NOT_FOUND) {
+      if (error instanceof FetchError) {
+        if (error.code === ERR_CODE.NOT_FOUND) {
           alert(
             'No existe',
             `El usuario "${nombre}" no existe o ha sido borrado`,
