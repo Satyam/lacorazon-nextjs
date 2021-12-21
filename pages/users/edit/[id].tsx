@@ -12,7 +12,7 @@ import Layout from 'components/Layout';
 import { ButtonIconAdd, ButtonIconDelete, ButtonSet } from 'components/Icons';
 import { Loading, useModals, Alert } from 'components/Modals';
 import { useGetUser, createUser, updateUser, deleteUser } from 'lib/users';
-import { ERR_CODE, FetchError } from 'lib/fetch';
+import { ERR_CODE, FetchError, SqlError, SQLITE_CONSTRAINT } from 'lib/errors';
 import type { User } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
@@ -68,7 +68,7 @@ export default function EditUser() {
     formReturn
   ) => {
     const handleUpsertError = (error: Error) => {
-      if (error instanceof FetchError) {
+      if (error instanceof SqlError) {
         switch (error.code) {
           case ERR_CODE.NOT_FOUND:
             return (
@@ -76,7 +76,7 @@ export default function EditUser() {
                 El usuario ya había sido borrado
               </Alert>
             );
-          case ERR_CODE.DUPLICATE:
+          case SQLITE_CONSTRAINT:
             formReturn.setError('nombre', {
               type: 'duplicado',
               message: 'Ese nombre ya existe',

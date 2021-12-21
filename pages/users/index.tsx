@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useListUsers, deleteUser } from 'lib/users';
-import { ERR_CODE, FetchError } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 import {
   ButtonIconAdd,
   ButtonIconEdit,

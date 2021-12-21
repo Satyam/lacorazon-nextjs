@@ -5,40 +5,7 @@ import sqlite3 from 'sqlite3';
 
 import { join } from 'path';
 
-type SQLiteErr = {
-  errno: number;
-  code: string;
-  toString: () => string;
-};
-
-const rxUnique = /UNIQUE\s*constraint\s*failed:\s*([a-zA-Z]\w*)\.([a-zA-Z]\w*)/;
-
-const SQLITE_EMPTY = 16; // Declared but not used by SQLite,
-const SQLITE_ERROR = 1; // Generic
-const SQLITE_NOTFOUND = 12;
-export class SqlError extends Error {
-  code: number;
-  table: string | undefined;
-  column: string | undefined;
-  constructor(err: SQLiteErr, table = '') {
-    super(err.toString());
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, SqlError);
-    }
-    this.name = 'SqlError';
-    this.code = err.errno;
-    this.table = table;
-    if (this.code === 19) {
-      const m = rxUnique.exec(err.toString());
-      if (m) {
-        this.table = m[1];
-        this.column = m[2];
-        return;
-      }
-    }
-  }
-}
+import { SqlError, SQLITE_ERROR, SQLITE_NOTFOUND } from 'lib/errors';
 
 let _db: Database;
 
@@ -119,7 +86,7 @@ export async function createWithCuid<R extends RecordWithoutId>(
     return getById<R & { id: ID }>(nombreTabla, id, camposSalida);
   } else {
     throw new SqlError(
-      { errno: SQLITE_ERROR, code: 'no changes' },
+      { errno: SQLITE_ERROR, code: 'no changes' }, // fake sqlite3 error object.
       nombreTabla
     );
   }

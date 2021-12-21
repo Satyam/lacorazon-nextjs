@@ -3,7 +3,7 @@ import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useListVendedores, deleteVendedor } from 'lib/vendedores';
-import { ERR_CODE, FetchError } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 import {
   ButtonIconAdd,
   ButtonIconEdit,

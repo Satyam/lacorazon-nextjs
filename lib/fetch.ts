@@ -1,36 +1,5 @@
 import useSWR from 'swr';
-import { SqlError } from 'data/utils';
-// These are HTTP status codes
-export enum ERR_CODE {
-  BAD_REQUEST = 400,
-  NOT_FOUND = 404,
-  DUPLICATE = 409,
-  UNAUTHORIZED = 401,
-  UNKNOWN = 500,
-}
-
-export class FetchError extends Error {
-  code: number;
-  url?: string;
-  constructor(res: Response | number, message?: string, url?: string) {
-    if (typeof res === 'number') {
-      super(message);
-      this.code = res;
-      this.url = url;
-    } else {
-      super(res.statusText);
-      this.code = res.status;
-      this.url = res.url;
-    }
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, FetchError);
-    }
-    this.name = 'FetchError';
-  }
-  toString() {
-    return `FetchError: ${this.message} Status: ${this.code} on fetch from  ${this.url}`;
-  }
-}
+import { MyError, FetchError } from 'lib/errors';
 
 export enum OP {
   LIST = 'list',
@@ -49,7 +18,7 @@ export type API_REQ<T extends AnyRecordOrArray = AnyRecord> = {
 
 export type API_REPLY<T extends AnyRecordOrArray = AnyRecord> = {
   data?: T;
-  error?: FetchError | SqlError | Error;
+  error?: MyError | Error;
 };
 
 function prePostProcess<OUT extends AnyRecord = AnyRecord>(

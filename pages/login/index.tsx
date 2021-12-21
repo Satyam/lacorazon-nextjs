@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as yup from 'yup';
-import { ERR_CODE, FetchError } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 import { useRouter } from 'next/router';
 import {
   Form,

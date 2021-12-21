@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { list, get, create, update, del } from 'data/user';
 import type { User } from 'data/types';
-import { API_REQ, API_REPLY, OP, ERR_CODE, FetchError } from 'lib/fetch';
+import { API_REQ, API_REPLY, OP } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,8 +11,8 @@ export default async function handler(
   const { op, id, data: user } = req.body as API_REQ<Partial<User>>;
   const badRequest = (msg: string) => ({
     error: new FetchError(
-      ERR_CODE.BAD_REQUEST,
       `${msg} in ${JSON.stringify(req.body)}`,
+      ERR_CODE.BAD_REQUEST,
       req.url
     ),
   });
@@ -26,7 +27,7 @@ export default async function handler(
           return res.json({ data });
         }
         return res.json({
-          error: new FetchError(ERR_CODE.NOT_FOUND, 'No existe', req.url),
+          error: new FetchError('No existe', ERR_CODE.NOT_FOUND, req.url),
         });
       }
       return res.json(badRequest('Missing [id]'));

@@ -6,7 +6,7 @@ import Layout from 'components/Layout';
 import { Loading, Alert } from 'components/Modals';
 import { TablaVentas } from 'pages/ventas/index';
 import { useGetVendedor } from 'lib/vendedores';
-import { ERR_CODE, FetchError } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 
 const ShowVendedores = () => {
   const router = useRouter();

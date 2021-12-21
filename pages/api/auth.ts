@@ -1,7 +1,8 @@
 import { withIronSessionApiRoute } from 'iron-session/next';
 import sessionOptions from 'lib/auth';
 import { checkValidUser } from 'data/user';
-import { API_REQ, API_REPLY, OP, ERR_CODE, FetchError } from 'lib/fetch';
+import { API_REQ, API_REPLY, OP } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 
 import type { NextApiRequest, NextApiResponse } from 'next';
 import type { User } from 'data/types';
@@ -19,8 +20,8 @@ export default withIronSessionApiRoute(
     const { op, data } = req.body as API_REQ<LoginFormInfo>;
     const badRequest = (msg: string) => ({
       error: new FetchError(
-        ERR_CODE.BAD_REQUEST,
         `${msg} in ${JSON.stringify(req.body)}`,
+        ERR_CODE.BAD_REQUEST,
         req.url
       ),
     });
@@ -31,8 +32,8 @@ export default withIronSessionApiRoute(
         } else {
           return res.json({
             error: new FetchError(
-              ERR_CODE.UNAUTHORIZED,
               'Unauthorized',
+              ERR_CODE.UNAUTHORIZED,
               req.url
             ),
           });
@@ -56,8 +57,8 @@ export default withIronSessionApiRoute(
           } else {
             return res.json({
               error: new FetchError(
-                ERR_CODE.UNAUTHORIZED,
                 'Unauthorized',
+                ERR_CODE.UNAUTHORIZED,
                 req.url
               ),
             });

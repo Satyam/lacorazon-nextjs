@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { list } from 'data/ventas';
 import type { Venta } from 'data/types';
-import { API_REQ, API_REPLY, OP, ERR_CODE, FetchError } from 'lib/fetch';
+import { API_REQ, API_REPLY, OP } from 'lib/fetch';
+import { ERR_CODE, FetchError } from 'lib/errors';
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,8 +12,8 @@ export default async function handler(
   const idVendedor = options?.idVendedor as ID;
   const badRequest = (msg: string) => ({
     error: new FetchError(
-      ERR_CODE.BAD_REQUEST,
       `${msg} in ${JSON.stringify(req.body)}`,
+      ERR_CODE.BAD_REQUEST,
       req.url
     ),
   });

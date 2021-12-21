@@ -17,7 +17,7 @@ import {
   updateVendedor,
   deleteVendedor,
 } from 'lib/vendedores';
-import { ERR_CODE, FetchError } from 'lib/fetch';
+import { ERR_CODE, FetchError, SqlError, SQLITE_CONSTRAINT } from 'lib/errors';
 import type { Vendedor } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
@@ -77,10 +77,7 @@ export default function EditVendedor() {
       await updateVendedor(id, values)
         .then(({ error }) => {
           if (error) {
-            if (
-              error instanceof FetchError &&
-              error.code === ERR_CODE.DUPLICATE
-            ) {
+            if (error instanceof SqlError && error.code === SQLITE_CONSTRAINT) {
               formReturn.setError('nombre', {
                 type: 'duplicado',
                 message: 'Ese nombre ya existe',
@@ -95,10 +92,7 @@ export default function EditVendedor() {
       await createVendedor(values)
         .then(({ data, error }) => {
           if (error) {
-            if (
-              error instanceof FetchError &&
-              error.code === ERR_CODE.DUPLICATE
-            ) {
+            if (error instanceof SqlError && error.code === SQLITE_CONSTRAINT) {
               formReturn.setError('nombre', {
                 type: 'duplicado',
                 message: 'Ese nombre ya existe',
