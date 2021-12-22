@@ -17,7 +17,12 @@ import {
   updateVendedor,
   deleteVendedor,
 } from 'lib/vendedores';
-import { ERR_CODE, FetchError, SqlError, SQLITE_CONSTRAINT } from 'lib/errors';
+import {
+  ERR_CODE,
+  isApiError,
+  SQLITE_CONSTRAINT,
+  SQLITE_NOTFOUND,
+} from 'lib/errors';
 import type { Vendedor } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
@@ -36,11 +41,11 @@ export default function EditVendedor() {
 
   const { data: vendedor, error } = useGetVendedor(id as ID);
 
-  const { openLoading, closeLoading, confirmDelete } = useModals();
+  const { openLoading, closeLoading, confirmDelete, alert } = useModals();
   // const { can } = useAuth0();
 
-  const handleError = (error: Error) => {
-    if (error instanceof FetchError && error.code === ERR_CODE.NOT_FOUND) {
+  if (error) {
+    if (isApiError(error, 'FetchError', ERR_CODE.NOT_FOUND)) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El vendedor pedido no existe o ha sido borrado
@@ -49,11 +54,10 @@ export default function EditVendedor() {
     }
     return (
       <Alert warning heading="Error Desconocido" onClose={() => router.back()}>
-        Error inesperado: {error}
+        Error inesperado: {error.message}
       </Alert>
     );
-  };
-  if (error) return handleError(error);
+  }
 
   if (id && !vendedor) return <Loading>Cargando usuario</Loading>;
 
@@ -62,7 +66,22 @@ export default function EditVendedor() {
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () => {
       deleteVendedor(id as string).then(({ data, error }) => {
-        if (error) return handleError(error);
+        if (error) {
+          if (isApiError(error, 'SqlError', SQLITE_NOTFOUND)) {
+            return alert(
+              'No existe',
+              `El usuario "${nombre}" no existe o ha sido borrado`,
+              true,
+              () => {}
+            );
+          }
+          return alert(
+            'Inesperado',
+            `Error inesperado ${error.message}`,
+            true,
+            () => {}
+          );
+        }
         router.back();
       });
     });
@@ -72,34 +91,41 @@ export default function EditVendedor() {
     values,
     formReturn
   ) => {
+    const handleUpsertError = (error: Error) => {
+      if (isApiError(error, 'FetchError', ERR_CODE.NOT_FOUND)) {
+        return alert(
+          'No existe',
+          'El usuario ya había sido borrado',
+          true,
+          () => router.back()
+        );
+      }
+      if (isApiError(error, 'SqlError', SQLITE_CONSTRAINT)) {
+        formReturn.setError('nombre', {
+          type: 'duplicado',
+          message: 'Ese nombre ya existe',
+        });
+      }
+      return alert(
+        'Inesperado',
+        `Error inesperado ${error.message}`,
+        true,
+        () => {}
+      );
+    };
+
     if (id) {
       openLoading('Actualizando vendedor');
       await updateVendedor(id, values)
         .then(({ error }) => {
-          if (error) {
-            if (error instanceof SqlError && error.code === SQLITE_CONSTRAINT) {
-              formReturn.setError('nombre', {
-                type: 'duplicado',
-                message: 'Ese nombre ya existe',
-              });
-            }
-            return handleError(error);
-          }
+          if (error) handleUpsertError(error);
         })
         .finally(closeLoading);
     } else {
       openLoading('Creando vendedor');
       await createVendedor(values)
         .then(({ data, error }) => {
-          if (error) {
-            if (error instanceof SqlError && error.code === SQLITE_CONSTRAINT) {
-              formReturn.setError('nombre', {
-                type: 'duplicado',
-                message: 'Ese nombre ya existe',
-              });
-            }
-            return handleError(error);
-          }
+          if (error) handleUpsertError(error);
           router.replace(`/vendedores/edit/${data?.id}`);
         })
         .finally(closeLoading);

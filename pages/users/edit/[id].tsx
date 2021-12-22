@@ -12,7 +12,12 @@ import Layout from 'components/Layout';
 import { ButtonIconAdd, ButtonIconDelete, ButtonSet } from 'components/Icons';
 import { Loading, useModals, Alert } from 'components/Modals';
 import { useGetUser, createUser, updateUser, deleteUser } from 'lib/users';
-import { ERR_CODE, FetchError, SqlError, SQLITE_CONSTRAINT } from 'lib/errors';
+import {
+  ERR_CODE,
+  isApiError,
+  SQLITE_CONSTRAINT,
+  SQLITE_NOTFOUND,
+} from 'lib/errors';
 import type { User } from 'data/types';
 
 // import { useAuth0 } from 'Providers/Auth';
@@ -31,11 +36,11 @@ export default function EditUser() {
 
   const { data: user, error } = useGetUser(id as ID);
 
-  const { openLoading, closeLoading, confirmDelete } = useModals();
+  const { openLoading, closeLoading, confirmDelete, alert } = useModals();
   // const { can } = useAuth0();
 
-  const handleGetError = (error: Error) => {
-    if (error instanceof FetchError && error.code === ERR_CODE.NOT_FOUND) {
+  if (error) {
+    if (isApiError(error, 'FetchError', ERR_CODE.NOT_FOUND)) {
       return (
         <Alert heading="No existe" warning onClose={() => router.back()}>
           El usuario pedido no existe o ha sido borrado
@@ -47,8 +52,7 @@ export default function EditUser() {
         Error inesperado: {error}
       </Alert>
     );
-  };
-  if (error) return handleGetError(error);
+  }
 
   if (id && !user) return <Loading>Cargando usuario</Loading>;
 
@@ -56,8 +60,23 @@ export default function EditUser() {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () => {
-      deleteUser(id as string).then(({ data, error }) => {
-        if (error) return handleGetError(error);
+      deleteUser(id as string).then(({ error }) => {
+        if (error) {
+          if (isApiError(error, 'SqlError', SQLITE_NOTFOUND)) {
+            return alert(
+              'No existe',
+              `El usuario "${nombre}" no existe o ha sido borrado`,
+              true,
+              () => {}
+            );
+          }
+          return alert(
+            'Inesperado',
+            `Error inesperado ${error.message}`,
+            true,
+            () => {}
+          );
+        }
         router.back();
       });
     });
@@ -68,32 +87,25 @@ export default function EditUser() {
     formReturn
   ) => {
     const handleUpsertError = (error: Error) => {
-      if (error instanceof SqlError) {
-        switch (error.code) {
-          case ERR_CODE.NOT_FOUND:
-            return (
-              <Alert heading="No existe" warning onClose={() => router.back()}>
-                El usuario ya había sido borrado
-              </Alert>
-            );
-          case SQLITE_CONSTRAINT:
-            formReturn.setError('nombre', {
-              type: 'duplicado',
-              message: 'Ese nombre ya existe',
-            });
-            return (
-              <Alert heading="Duplicado" warning onClose={() => undefined}>
-                Ya existe un usuario con ese mismo nombre
-              </Alert>
-            );
-
-          default:
-        }
+      if (isApiError(error, 'FetchError', ERR_CODE.NOT_FOUND)) {
+        return alert(
+          'No existe',
+          'El usuario ya había sido borrado',
+          true,
+          () => router.back()
+        );
       }
-      return (
-        <Alert warning heading="Error Desconocido" onClose={() => undefined}>
-          Error inesperado: {error}
-        </Alert>
+      if (isApiError(error, 'SqlError', SQLITE_CONSTRAINT)) {
+        formReturn.setError('nombre', {
+          type: 'duplicado',
+          message: 'Ese nombre ya existe',
+        });
+      }
+      return alert(
+        'Inesperado',
+        `Error inesperado ${error.message}`,
+        true,
+        () => {}
       );
     };
 
