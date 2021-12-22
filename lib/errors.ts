@@ -74,3 +74,17 @@ export class SqlError extends Error {
     }
   }
 }
+
+export const isApiError = (
+  error:
+    | Error
+    | {
+        name: 'FetchError' | 'SqlError' | 'MyError';
+        code: number;
+      },
+  name: string,
+  code: number
+) => {
+  if (error instanceof Error) return false;
+  return error.name === name && error.code === code;
+};
