@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import * as yup from 'yup';
-import { ERR_CODE, FetchError } from 'lib/errors';
+import { ERR_CODE, isApiError } from 'lib/errors';
 import { useRouter } from 'next/router';
 import {
   Form,
@@ -31,8 +31,8 @@ export default function Login() {
   const onSubmit: OnFormSubmitFunction<LoginFormInfo> = async (values) => {
     openLoading('Verificando usuario');
     const { error } = await login(values);
-    if (error instanceof FetchError) {
-      if (error.code === ERR_CODE.UNAUTHORIZED) {
+    if (error) {
+      if (isApiError(error, 'FetchError', ERR_CODE.UNAUTHORIZED)) {
         setUnauthorized(true);
       } else {
         throw error;

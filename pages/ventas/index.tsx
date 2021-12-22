@@ -31,7 +31,7 @@ export const TablaVentas: React.FC<{
   if (error)
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        Error inesperado: {error}
+        Error inesperado: {error.message}
       </Alert>
     );
   if (!ventas) return <Loading>Cargando ventas</Loading>;

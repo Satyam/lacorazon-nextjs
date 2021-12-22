@@ -3,7 +3,7 @@ import { Table, ButtonGroup } from 'react-bootstrap';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { useListVendedores, deleteVendedor } from 'lib/vendedores';
-import { ERR_CODE, FetchError } from 'lib/errors';
+import { ERR_CODE, isApiError } from 'lib/errors';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -23,7 +23,7 @@ const ListVendedoress = () => {
   if (error)
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        Error: {error} ???
+        Error: {error.message} ???
       </Alert>
     );
   if (!vendedores) return <Loading>Cargando vendedores</Loading>;
@@ -35,18 +35,24 @@ const ListVendedoress = () => {
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al vendedor ${nombre}`, async () => {
       const { error } = await deleteVendedor(id as string);
-      if (error instanceof FetchError) {
-        if (error.code === ERR_CODE.NOT_FOUND) {
-          alert(
+
+      if (error) {
+        if (isApiError(error, 'FetchError', ERR_CODE.NOT_FOUND)) {
+          return alert(
             'No existe',
             `El vendedor "${nombre}" no existe o ha sido borrado`,
             true,
             () => {}
           );
-        } else throw new Error(`Error inesperado: ${error}`);
-      } else {
-        mutate();
+        }
+        return alert(
+          'Inesperado',
+          `Error inesperado ${error.message}`,
+          true,
+          () => {}
+        );
       }
+      mutate();
     });
   };
 

@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { useListUsers, deleteUser } from 'lib/users';
-import { ERR_CODE, FetchError } from 'lib/errors';
+import { ERR_CODE, isApiError } from 'lib/errors';
 import {
   ButtonIconAdd,
   ButtonIconEdit,
@@ -38,7 +38,7 @@ const ListUsers = ({
   if (error)
     return (
       <Alert warning heading="Desconocido" onClose={() => router.back()}>
-        Error inesperado: {error}
+        Error inesperado: {error.message}
       </Alert>
     );
 
@@ -52,18 +52,23 @@ const ListUsers = ({
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, async () => {
       const { error } = await deleteUser(id as string);
-      if (error instanceof FetchError) {
-        if (error.code === ERR_CODE.NOT_FOUND) {
-          alert(
+      if (error) {
+        if (isApiError(error, 'FetchError', ERR_CODE.NOT_FOUND)) {
+          return alert(
             'No existe',
             `El usuario "${nombre}" no existe o ha sido borrado`,
             true,
             () => {}
           );
-        } else throw new Error(`Error inesperado: ${error}`);
-      } else {
-        mutate();
+        }
+        return alert(
+          'Inesperado',
+          `Error inesperado ${error.message}`,
+          true,
+          () => {}
+        );
       }
+      mutate();
     });
   };
 
