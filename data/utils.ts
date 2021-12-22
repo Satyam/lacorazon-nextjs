@@ -136,11 +136,11 @@ export async function deleteById<R extends AnyRecord = AnyRecord>(
         throw new SqlError(err, nombreTabla);
       });
     if (changes === 1) return old as R;
-    throw new SqlError(
-      { errno: SQLITE_NOTFOUND, code: 'no changes' },
-      nombreTabla
-    );
-  } else return;
+  }
+  throw new SqlError(
+    { errno: SQLITE_NOTFOUND, code: 'no changes' },
+    nombreTabla
+  );
 }
 
 // export function delay(ms: number) {
