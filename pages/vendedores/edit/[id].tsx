@@ -20,6 +20,7 @@ import {
 import {
   ERR_CODE,
   isApiError,
+  SqlError,
   SQLITE_CONSTRAINT,
   SQLITE_NOTFOUND,
 } from 'lib/errors';
@@ -101,10 +102,14 @@ export default function EditVendedor() {
         );
       }
       if (isApiError(error, 'SqlError', SQLITE_CONSTRAINT)) {
-        formReturn.setError('nombre', {
-          type: 'duplicado',
-          message: 'Ese nombre ya existe',
-        });
+        const field = (error as SqlError).column;
+        if (field && ['id', 'nombre', 'email'].includes(field)) {
+          formReturn.setError(field as 'id' | 'nombre' | 'email', {
+            type: 'duplicado',
+            message: `Ese ${field} ya existe`,
+          });
+          return;
+        }
       }
       return alert(
         'Inesperado',
@@ -118,14 +123,14 @@ export default function EditVendedor() {
       openLoading('Actualizando vendedor');
       await updateVendedor(id, values)
         .then(({ error }) => {
-          if (error) handleUpsertError(error);
+          if (error) return handleUpsertError(error);
         })
         .finally(closeLoading);
     } else {
       openLoading('Creando vendedor');
       await createVendedor(values)
         .then(({ data, error }) => {
-          if (error) handleUpsertError(error);
+          if (error) return handleUpsertError(error);
           router.replace(`/vendedores/edit/${data?.id}`);
         })
         .finally(closeLoading);

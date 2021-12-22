@@ -15,6 +15,7 @@ import { useGetUser, createUser, updateUser, deleteUser } from 'lib/users';
 import {
   ERR_CODE,
   isApiError,
+  SqlError,
   SQLITE_CONSTRAINT,
   SQLITE_NOTFOUND,
 } from 'lib/errors';
@@ -96,10 +97,14 @@ export default function EditUser() {
         );
       }
       if (isApiError(error, 'SqlError', SQLITE_CONSTRAINT)) {
-        formReturn.setError('nombre', {
-          type: 'duplicado',
-          message: 'Ese nombre ya existe',
-        });
+        const field = (error as SqlError).column;
+        if (field && ['id', 'nombre', 'email'].includes(field)) {
+          formReturn.setError(field as 'id' | 'nombre' | 'email', {
+            type: 'duplicado',
+            message: `Ese ${field} ya existe`,
+          });
+          return;
+        }
       }
       return alert(
         'Inesperado',
