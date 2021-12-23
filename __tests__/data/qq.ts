@@ -106,6 +106,14 @@ describe('with sqlite3', () => {
       } else done('failed to catch duplicate');
     });
   });
+
+  test('check there are still only two records', (done) => {
+    db.get(countRecords, (err, row) => {
+      if (err) done(err);
+      expect(row.cant).toBe(2);
+      done();
+    });
+  });
 });
 
 describe('with sqlite', () => {
@@ -125,15 +133,18 @@ describe('with sqlite', () => {
       expect(result.lastID).toBe(1);
       expect(result.changes).toBe(1);
     }));
+
   test('Insert second record', () =>
     db.run(secondInsert).then((result) => {
       expect(result.lastID).toBe(2);
       expect(result.changes).toBe(1);
     }));
+
   test('Count Records', () =>
     db.get<{ cant: number }>(countRecords).then((result) => {
       expect(result?.cant).toBe(2);
     }));
+
   test('Duplicate nombre', () =>
     db
       .run(dupNombre)
@@ -145,6 +156,7 @@ describe('with sqlite', () => {
         expect(m[1]).toBe('Vendedores');
         expect(m[2]).toBe('nombre');
       }));
+
   test('Duplicate email', () =>
     db
       .run(dupEmail)
@@ -156,4 +168,9 @@ describe('with sqlite', () => {
         expect(m[1]).toBe('Vendedores');
         expect(m[2]).toBe('email');
       }));
+
+  test('Check there are still only two records', () =>
+    db.get<{ cant: number }>(countRecords).then((result) => {
+      expect(result?.cant).toBe(2);
+    }));
 });
