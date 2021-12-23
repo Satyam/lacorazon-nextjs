@@ -12,7 +12,6 @@ import styles from './styles.module.css';
 
 export default function NavBar() {
   const { authorized, user, logout } = useAuth();
-  console.log({ authorized, user });
   const router = useRouter();
   const handleSelect = (eventKey: string | null) => {
     switch (eventKey) {

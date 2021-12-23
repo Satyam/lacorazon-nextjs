@@ -63,7 +63,6 @@ export const apiService = async <
     if (res.ok) {
       try {
         const { error, data } = await res.json();
-        console.log('after json', { error, data });
         return {
           error,
           data: prePostProcess<RES_TYPE>(data, post),
