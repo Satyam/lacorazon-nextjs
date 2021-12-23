@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-export const formatDate = (date?: Date, formatStr: string = 'P') =>
+export const formatDate = (date?: Date, formatStr = 'P') =>
   date ? format(date, formatStr) : '';
 
 const currency = 'EUR';

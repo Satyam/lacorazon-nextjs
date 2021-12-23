@@ -33,7 +33,7 @@ const initialValue = {
 
 export const ModalsContext = createContext<ModalsType>(initialValue);
 
-export const ModalsProvider: React.FC<{}> = ({ children }) => {
+export const ModalsProvider: React.FC = ({ children }) => {
   // Loading:
   const [t, setLoading] = useState<string | undefined>(undefined);
 

@@ -66,22 +66,16 @@ export default function EditVendedor() {
     ev.stopPropagation();
     const { nombre, id } = ev.currentTarget.dataset;
     confirmDelete(`al usuario ${nombre}`, () => {
-      deleteVendedor(id as string).then(({ data, error }) => {
+      deleteVendedor(id as string).then(({ error }) => {
         if (error) {
           if (isApiError(error, 'SqlError', SQLITE_NOTFOUND)) {
             return alert(
               'No existe',
               `El usuario "${nombre}" no existe o ha sido borrado`,
-              true,
-              () => {}
+              true
             );
           }
-          return alert(
-            'Inesperado',
-            `Error inesperado ${error.message}`,
-            true,
-            () => {}
-          );
+          return alert('Inesperado', `Error inesperado ${error.message}`, true);
         }
         router.back();
       });
@@ -111,12 +105,7 @@ export default function EditVendedor() {
           return;
         }
       }
-      return alert(
-        'Inesperado',
-        `Error inesperado ${error.message}`,
-        true,
-        () => {}
-      );
+      return alert('Inesperado', `Error inesperado ${error.message}`, true);
     };
 
     if (id) {

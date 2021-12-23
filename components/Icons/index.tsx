@@ -45,7 +45,7 @@ export const Icon: React.FC<{
   isButton?: boolean;
   disabled?: boolean;
   className?: string;
-  onClick?: React.EventHandler<any>;
+  onClick?: React.EventHandler<React.MouseEvent>;
 }> = ({
   IconComponent,
   color,
@@ -74,7 +74,6 @@ export const ButtonIconAdd: React.FC<MyButtonProps> = ({
   children,
   color = 'primary',
   title = 'Agregar',
-  outline,
   ...props
 }) => (
   <MyButton color={color} title={title} {...props}>

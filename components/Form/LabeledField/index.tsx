@@ -7,11 +7,11 @@ import styles from '../styles.module.css';
 export const LabeledText: React.FC<
   {
     label: string;
-    value: any;
+    value?: string;
     pre?: boolean;
     className?: string;
   } & DOMAttributes<HTMLDivElement>
-> = ({ label, value, children, pre, className }) => (
+> = ({ label, value, pre, className }) => (
   <Form.Group as={Row} className={classnames(styles.formGroup, className)}>
     <Form.Label column xs={12} lg={2}>
       {label}
@@ -23,7 +23,7 @@ export const LabeledText: React.FC<
         className={classnames(styles.labeledField, {
           [styles.labeledPre]: pre,
         })}
-        defaultValue={value || children}
+        defaultValue={value}
       />
     </Col>
   </Form.Group>
@@ -31,7 +31,7 @@ export const LabeledText: React.FC<
 
 export const LabeledCheckbox: React.FC<{
   label: string;
-  value?: any;
+  value?: boolean;
   checked?: boolean;
   className?: string;
 }> = ({ label, value, checked, className, ...rest }) => (
@@ -41,7 +41,7 @@ export const LabeledCheckbox: React.FC<{
     </Form.Label>
     <Col xs={12} lg={8}>
       <div className={styles.labeledField} {...rest}>
-        {value || checked ? <FaRegCheckSquare /> : <FaRegSquare />}
+        {value ?? checked ? <FaRegCheckSquare /> : <FaRegSquare />}
       </div>
     </Col>
   </Form.Group>

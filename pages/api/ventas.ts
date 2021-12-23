@@ -8,7 +8,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<API_REPLY<Partial<Venta> | Venta[]>>
 ) {
-  const { op, id, data: venta, options } = req.body as API_REQ<Partial<Venta>>;
+  const { op, options } = req.body as API_REQ<Partial<Venta>>;
   const idVendedor = options?.idVendedor as ID;
   const badRequest = (msg: string) => ({
     error: new FetchError(

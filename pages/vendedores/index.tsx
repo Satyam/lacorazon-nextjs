@@ -41,16 +41,10 @@ const ListVendedoress = () => {
           return alert(
             'No existe',
             `El vendedor "${nombre}" no existe o ha sido borrado`,
-            true,
-            () => {}
+            true
           );
         }
-        return alert(
-          'Inesperado',
-          `Error inesperado ${error.message}`,
-          true,
-          () => {}
-        );
+        return alert('Inesperado', `Error inesperado ${error.message}`, true);
       }
       mutate();
     });

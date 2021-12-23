@@ -24,6 +24,7 @@ export const TablaVentas: React.FC<{
 }> = ({ idVendedor }) => {
   const router = useRouter();
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const { data: ventas, error, mutate } = useListVentas(idVendedor);
 
   const { confirmDelete } = useModals();
@@ -37,9 +38,11 @@ export const TablaVentas: React.FC<{
   if (!ventas) return <Loading>Cargando ventas</Loading>;
 
   const onDelete: React.MouseEventHandler<HTMLButtonElement> = (ev) => {
-    ev.stopPropagation();
     const { fecha, id } = ev.currentTarget.dataset;
-    confirmDelete(`la venta del ${fecha}`, () => deleteVenta(id!));
+    if (id) {
+      ev.stopPropagation();
+      confirmDelete(`la venta del ${fecha}`, () => deleteVenta(id));
+    }
   };
 
   const rowVenta = (venta: VentaVendedor) => {
@@ -70,7 +73,7 @@ export const TablaVentas: React.FC<{
           {venta.iva ? <FaRegCheckSquare /> : <FaRegSquare />}
         </td>
         <td align="right">
-          {formatCurrency(venta.cantidad! * venta.precioUnitario!)}
+          {formatCurrency((venta.cantidad ?? 1) * (venta.precioUnitario ?? 0))}
         </td>
         <td align="center">
           <ButtonGroup size="sm">

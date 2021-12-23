@@ -67,16 +67,10 @@ export default function EditUser() {
             return alert(
               'No existe',
               `El usuario "${nombre}" no existe o ha sido borrado`,
-              true,
-              () => {}
+              true
             );
           }
-          return alert(
-            'Inesperado',
-            `Error inesperado ${error.message}`,
-            true,
-            () => {}
-          );
+          return alert('Inesperado', `Error inesperado ${error.message}`, true);
         }
         router.back();
       });
@@ -106,12 +100,7 @@ export default function EditUser() {
           return;
         }
       }
-      return alert(
-        'Inesperado',
-        `Error inesperado ${error.message}`,
-        true,
-        () => {}
-      );
+      return alert('Inesperado', `Error inesperado ${error.message}`, true);
     };
 
     if (id) {

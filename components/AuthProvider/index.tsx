@@ -33,7 +33,7 @@ const initialValue = {
 
 export const AuthContext = createContext<AuthType>(initialValue);
 
-export const AuthProvider: React.FC<{}> = ({ children }) => {
+export const AuthProvider: React.FC = ({ children }) => {
   const [authorized, setAuthorised] = useState(false);
   const [user, setUser] = useState<User | undefined>();
 

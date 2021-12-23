@@ -10,10 +10,9 @@ const DateField: React.FC<{
   label?: string;
   id?: string;
   help?: string;
-  className?: string;
   min?: string;
   max?: string;
-}> = ({ name, label, help, className, id, ...rest }) => {
+}> = ({ name, label, help, id, ...rest }) => {
   invariant(name, 'DateField: name argument is mandatory');
 
   // const { locale } = useIntl();

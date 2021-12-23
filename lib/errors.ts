@@ -44,7 +44,7 @@ type SQLiteErr = {
   toString: () => string;
 };
 
-const SQLITE_EMPTY = 16; // Declared but not used by SQLite,
+// const SQLITE_EMPTY = 16; // Declared but not used by SQLite,
 export const SQLITE_ERROR = 1; // Generic
 export const SQLITE_NOTFOUND = 12;
 export const SQLITE_CONSTRAINT = 19;

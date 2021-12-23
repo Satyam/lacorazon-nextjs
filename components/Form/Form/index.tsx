@@ -15,7 +15,7 @@ import { AnyObjectSchema } from 'yup';
 import classnames from 'classnames';
 import styles from '../styles.module.css';
 
-export type OnFormSubmitFunction<V extends Record<string, any>> = (
+export type OnFormSubmitFunction<V extends Record<string, unknown>> = (
   data: V,
   formReturn: UseFormReturn<V>
 ) => Promise<void> | void;
@@ -34,7 +34,7 @@ export function ReadOnlyForm({
     </BSForm>
   );
 }
-export function Form<V extends Record<string, any>>({
+export function Form<V extends Record<string, unknown>>({
   mode,
   reValidateMode,
   defaultValues,
@@ -45,7 +45,6 @@ export function Form<V extends Record<string, any>>({
   shouldFocusError,
   onSubmit,
   children,
-  inline,
   className,
   ...rest
 }: UseFormProps<V> & {
@@ -75,7 +74,7 @@ export function Form<V extends Record<string, any>>({
   const mySubmit: SubmitHandler<V> = (values) => {
     const result = onSubmit(values as V, formReturn);
     if (result instanceof Promise) {
-      return result.catch((err: any) => {
+      return result.catch((err: Error) => {
         console.error(err);
         setStatus(err.toString());
       });
