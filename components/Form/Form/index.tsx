@@ -7,8 +7,7 @@ import {
   UseFormProps,
   SubmitHandler,
 } from 'react-hook-form';
-// TODO This is a patch, see: https://github.com/react-hook-form/resolvers/issues/271
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import invariant from 'invariant';
 import { AnyObjectSchema } from 'yup';
 
